@@ -103,63 +103,66 @@ class PillConstellationManager(
             _orchestratorConfig.value.id -> _orchestratorConfig.update { it.copy(displayName = newName) }
             _editorConfig.value.id -> _editorConfig.update { it.copy(displayName = newName) }
             _aiConfig.value.id -> _aiConfig.update { it.copy(displayName = newName) }
-            else -> _customPills.update { current ->
-                current[pillId]?.let { current + (pillId to it.copy(displayName = newName)) } ?: current
+            else -> {
+                _customPills.update { map ->
+                    val existing = map[pillId]
+                    if (existing != null) map + (pillId to existing.copy(displayName = newName)) else map
+                }
             }
         }
     }
 
-    fun changePillColor(pillId: String, newColorArgb: Long) {
+    fun setPillColor(pillId: String, colorArgb: Long) {
         when (pillId) {
-            _orchestratorConfig.value.id -> _orchestratorConfig.update { it.copy(colorArgb = newColorArgb) }
-            _editorConfig.value.id -> _editorConfig.update { it.copy(colorArgb = newColorArgb) }
-            _aiConfig.value.id -> _aiConfig.update { it.copy(colorArgb = newColorArgb) }
-            else -> _customPills.update { current ->
-                current[pillId]?.let { current + (pillId to it.copy(colorArgb = newColorArgb)) } ?: current
+            _orchestratorConfig.value.id -> _orchestratorConfig.update { it.copy(colorArgb = colorArgb) }
+            _editorConfig.value.id -> _editorConfig.update { it.copy(colorArgb = colorArgb) }
+            _aiConfig.value.id -> _aiConfig.update { it.copy(colorArgb = colorArgb) }
+            else -> {
+                _customPills.update { map ->
+                    val existing = map[pillId]
+                    if (existing != null) map + (pillId to existing.copy(colorArgb = colorArgb)) else map
+                }
             }
         }
     }
 
-    fun registerCustomPill(config: ActorPillConfig) {
-        _customPills.update { it + (config.id to config) }
-    }
+    // --- Telemetry & Events ---
 
-    fun unregisterCustomPill(pillId: String) {
-        _customPills.update { it - pillId }
-    }
-
-    // --- Telemetry Logging ---
-
-    fun logHappening(
+    fun recordHappening(
         recognizedUtterance: String,
         actorRole: ActorRole,
-        actorColorArgb: Long,
         actionName: String,
         details: String,
-        status: HappeningsEvent.EventStatus
+        status: HappeningsEvent.EventStatus = HappeningsEvent.EventStatus.COMMITTED
     ) {
+        val resolvedColor = when (actorRole) {
+            ActorRole.ORCHESTRATOR_DICTATION -> _orchestratorConfig.value.colorArgb
+            ActorRole.DETERMINISTIC_EDITOR -> _editorConfig.value.colorArgb
+            ActorRole.GENERATIVE_AI -> _aiConfig.value.colorArgb
+            ActorRole.CUSTOM -> _customPills.value.values.firstOrNull()?.colorArgb ?: 0xFF9E9E9EL
+        }
         val event = HappeningsEvent(
-            id = "event_${System.currentTimeMillis()}",
-            timestampMs = System.currentTimeMillis(),
+            id = "evt_${_happenings.value.size + 1}_${kotlinx.datetime.Clock.System.now().toEpochMilliseconds()}",
+            timestampMs = kotlinx.datetime.Clock.System.now().toEpochMilliseconds(),
             recognizedUtterance = recognizedUtterance,
             actorRole = actorRole,
-            actorColorArgb = actorColorArgb,
+            actorColorArgb = resolvedColor,
             actionName = actionName,
             details = details,
             status = status
         )
-        _happenings.update { listOf(event) + it.take(49) }
+        _happenings.update { listOf(event) + it.take(29) } // Retain last 30 events
     }
 
     fun appendTranscript(
         speaker: String,
         text: String,
-        confidence: Float = 0.95f,
-        isFinal: Boolean = true
+        confidence: Float,
+        isFinal: Boolean
     ) {
         val entry = TranscriptEntry(
-            id = "tr_${System.currentTimeMillis()}",
-            timestampMs = System.currentTimeMillis(),
+            id = "tr_${_transcript.value.size + 1}_${kotlinx.datetime.Clock.System.now().toEpochMilliseconds()}",
+            timestampMs = kotlinx.datetime.Clock.System.now().toEpochMilliseconds(),
             speaker = speaker,
             text = text,
             confidence = confidence,
@@ -168,25 +171,67 @@ class PillConstellationManager(
         _transcript.update { it + entry }
     }
 
-    // --- Projections & Target Cones ---
+    fun setOrchestratorStatus(status: ActorPillStatus) {
+        _orchestratorStatus.value = status
+    }
+
+    fun setAiStatus(status: ActorPillStatus) {
+        _aiStatus.value = status
+    }
+
+    fun updateOrchestratorPosition(x: Float, y: Float) {
+        _orchestratorPosition.value = SpatialPoint(x, y)
+    }
 
     /**
-     * Trigger a new worker pill projection animation from the Orchestrator to a target canvas coordinate.
+     * Projects and spawns a new worker pill into existence from the Orchestrator (Red Pill).
+     * Supports 3 styles: BEAM_TELEPORT, MITOSIS_EJECT, and HOLOGRAPHIC_MATERIALIZE.
      */
-    fun projectPill(
+    fun spawnWorkerPill(
         targetConfig: ActorPillConfig,
-        targetPoint: SpatialPoint,
-        style: PillProjectionStyle,
+        targetPosition: SpatialPoint,
+        style: PillProjectionStyle = PillProjectionStyle.BEAM_TELEPORT,
+        sourcePosition: SpatialPoint? = null,
         durationMs: Long = 650L
-    ) {
-        _activeProjection.value = PillProjectionEvent(
-            id = "proj_${System.currentTimeMillis()}",
-            sourcePoint = _orchestratorPosition.value,
-            targetPoint = targetPoint,
+    ): PillProjectionEvent {
+        val src = sourcePosition ?: _orchestratorPosition.value
+        val event = PillProjectionEvent(
+            id = "proj_${_customPills.value.size + 1}_${kotlinx.datetime.Clock.System.now().toEpochMilliseconds()}",
+            sourcePoint = src,
+            targetPoint = targetPosition,
             targetPillConfig = targetConfig,
             style = style,
-            durationMs = durationMs
+            durationMs = durationMs,
+            progress = 0f
         )
+        _activeProjection.value = event
+
+        // Register worker pill into constellation
+        when (targetConfig.role) {
+            ActorRole.DETERMINISTIC_EDITOR -> _editorConfig.value = targetConfig
+            ActorRole.GENERATIVE_AI -> _aiConfig.value = targetConfig
+            else -> _customPills.update { it + (targetConfig.id to targetConfig) }
+        }
+
+        recordHappening(
+            recognizedUtterance = "luo toimija ${targetConfig.displayName}",
+            actorRole = ActorRole.ORCHESTRATOR_DICTATION,
+            actionName = "PROJECT_PILL",
+            details = "Projected ${targetConfig.displayName} using ${style.name}",
+            status = HappeningsEvent.EventStatus.COMMITTED
+        )
+
+        return event
+    }
+
+    fun completeProjection(projectionId: String) {
+        if (_activeProjection.value?.id == projectionId) {
+            _activeProjection.value = null
+        }
+    }
+
+    fun clearProjection() {
+        _activeProjection.value = null
     }
 
     fun clearActiveProjection() {
@@ -194,41 +239,48 @@ class PillConstellationManager(
     }
 
     /**
-     * Highlight a target document word/phrase with a volumetric projection cone.
+     * Emits a volumetric target projection cone (warm orange-ish cone) from an actor pill
+     * highlighting a document object (word, phrase, or paraphrase).
      */
-    fun showTargetCone(
+    fun projectTargetCone(
+        pillPosition: SpatialPoint,
         targetBounds: TextRangeBounds,
         targetRect: SpatialRect,
         label: String? = null,
         colorArgb: Long = 0xFFF97316L
     ) {
         _activeTargetCone.value = PillTargetCone(
-            pillPosition = _orchestratorPosition.value,
+            pillPosition = pillPosition,
             targetBounds = targetBounds,
             targetRect = targetRect,
             colorArgb = colorArgb,
-            targetLabel = label
+            targetLabel = label,
+            isPulsing = true
         )
     }
 
-    fun dismissTargetCone() {
+    fun clearTargetCone() {
         _activeTargetCone.value = null
     }
 
     /**
-     * Relocate the orchestrator anchor (e.g. from caret movements or autonomous snap transit).
+     * Executes autonomous "fast go, fast stop" relocation for an actor pill.
      */
-    fun updateOrchestratorPosition(point: SpatialPoint) {
-        _orchestratorPosition.value = point
-    }
-
-    fun triggerAutonomousTransit(targetPoint: SpatialPoint) {
-        val currentPoint = _orchestratorPosition.value
-        _orchestratorStatus.value = ActorPillStatus.AutonomousTransit(
-            from = currentPoint,
-            to = targetPoint,
-            progress = 0f
+    fun movePillAutonomously(
+        pillId: String,
+        from: SpatialPoint,
+        to: SpatialPoint
+    ) {
+        val status = ActorPillStatus.AutonomousTransit(
+            from = from,
+            to = to,
+            progress = 0f,
+            motionStretch = 1.15f
         )
-        _orchestratorPosition.value = targetPoint
+        when (pillId) {
+            _orchestratorConfig.value.id -> _orchestratorStatus.value = status
+            _aiConfig.value.id -> _aiStatus.value = status
+            else -> Unit
+        }
     }
 }

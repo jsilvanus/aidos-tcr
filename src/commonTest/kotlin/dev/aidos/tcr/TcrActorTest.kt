@@ -22,6 +22,7 @@ import dev.aidos.tcr.model.UniversalEnvelope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -63,6 +64,7 @@ class TcrActorTest {
             onCommit = { committed = true }
         )
 
+        runCurrent()
         advanceTimeBy(50L)
         val staging = engine.currentStatus.value
         assertTrue(staging is ActorPillStatus.CadenceStaging)

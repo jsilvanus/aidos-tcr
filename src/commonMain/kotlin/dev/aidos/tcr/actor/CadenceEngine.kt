@@ -99,62 +99,112 @@ class CadenceEngine(
                     remainingMs -= defaultTickIntervalMs
                 }
 
-                // Countdown finished: Commit Flash beat
-                _currentStatus.value = ActorPillStatus.CommitFlash(targetRange)
-                delay(100L)
+                if (!isCurrentlyPaused) {
+                    _currentStatus.value = ActorPillStatus.CadenceStaging(
+                        targetRange = targetRange,
+                        durationMs = totalDurationMs,
+                        remainingMs = 0L,
+                        progress = 0f,
+                        actionDescription = description,
+                        glyph = glyph,
+                        isPaused = false
+                    )
 
-                // Execute mutation
-                onCommit()
+                    onCommit()
 
-                // Reset to ambient waiting
-                _currentStatus.value = ActorPillStatus.WaitingAmbient
+                    // Brief commit flash (100ms)
+                    _currentStatus.value = ActorPillStatus.CommitFlash(targetRange)
+                    delay(100L)
+
+                    clearActiveState()
+                    _currentStatus.value = ActorPillStatus.WaitingAmbient
+                }
             } catch (e: CancellationException) {
-                // Aborted or cancelled cleanly
+                clearActiveState()
                 _currentStatus.value = ActorPillStatus.WaitingAmbient
                 throw e
             }
         }
+
         stagingJob = job
         return job
     }
 
     /**
-     * Pauses the countdown ring (Spring & Freeze gesture at >= 20dp displacement).
+     * Pauses the countdown immediately (Spring & Freeze).
      */
-    fun pauseStaging() {
-        val current = _currentStatus.value
-        if (current is ActorPillStatus.CadenceStaging && !current.isPaused) {
+    fun pause(): Boolean {
+        if (stagingJob?.isActive == true && !isCurrentlyPaused) {
             isCurrentlyPaused = true
-            _currentStatus.value = current.copy(isPaused = true)
+            val target = activeTargetRange
+            if (target != null) {
+                val progress = if (activeDurationMs > 0) activeRemainingMs.toFloat() / activeDurationMs.toFloat() else 0f
+                _currentStatus.value = ActorPillStatus.CadenceStaging(
+                    targetRange = target,
+                    durationMs = activeDurationMs,
+                    remainingMs = activeRemainingMs,
+                    progress = progress,
+                    actionDescription = activeDescription,
+                    glyph = activeGlyph,
+                    isPaused = true
+                )
+            }
+            return true
         }
+        return false
     }
 
+    fun pauseStaging(): Boolean = pause()
+
     /**
-     * Resumes a paused countdown from where it froze.
+     * Resumes a paused countdown.
      */
-    fun resumeStaging() {
-        val current = _currentStatus.value
-        if (current is ActorPillStatus.CadenceStaging && current.isPaused) {
+    fun resume(): Boolean {
+        if (isCurrentlyPaused && stagingJob?.isActive == true) {
             isCurrentlyPaused = false
-            _currentStatus.value = current.copy(isPaused = false)
+            val current = _currentStatus.value
+            if (current is ActorPillStatus.CadenceStaging) {
+                _currentStatus.value = current.copy(isPaused = false)
+            }
+            return true
         }
+        return false
     }
 
+    fun resumeStaging(): Boolean = resume()
+
     /**
-     * Aborts the active staged action (Tear-to-Abort gesture at >= 80dp displacement).
+     * Aborts the active staging action safely before it commits.
      */
-    fun abortCurrentAction() {
+    fun abortCurrentAction(): Boolean {
+        val wasActive = stagingJob?.isActive == true
         stagingJob?.cancel()
         stagingJob = null
-        isCurrentlyPaused = false
+        clearActiveState()
+        _currentStatus.value = ActorPillStatus.WaitingAmbient
+        return wasActive
+    }
+
+    private fun clearActiveState() {
+        activeTargetRange = null
+        activeDurationMs = 0L
+        activeRemainingMs = 0L
+        activeDescription = ""
         activeCommitAction = null
+        isCurrentlyPaused = false
+    }
+
+    fun resetToAmbient() {
+        abortCurrentAction()
         _currentStatus.value = ActorPillStatus.WaitingAmbient
     }
 
-    /**
-     * Reverts to ambient waiting.
-     */
-    fun resetToAmbient() {
-        abortCurrentAction()
+    fun setStatus(status: ActorPillStatus) {
+        if (stagingJob?.isActive == true && status !is ActorPillStatus.CadenceStaging) {
+            stagingJob?.cancel()
+            stagingJob = null
+            clearActiveState()
+        }
+        _currentStatus.value = status
     }
 }
