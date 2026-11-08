@@ -217,8 +217,8 @@ fun PersistentRedPill(
                         ProjectedPillInstance(
                             id = event.id,
                             name = event.targetPillConfig.displayName,
-                            roleColorArgb = event.targetPillConfig.colorArgb,
-                            targetOffset = event.targetPoint,
+                            roleColor = Color(event.targetPillConfig.colorArgb.toULong()),
+                            targetOffset = Offset(event.targetPoint.x, event.targetPoint.y),
                             style = event.style
                         )
                     )

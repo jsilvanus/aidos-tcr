@@ -1,5 +1,8 @@
 package dev.aidos.tcr.actor
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import kotlinx.serialization.Serializable
 
 /**
@@ -399,9 +402,26 @@ data class ProjectedPillInstance(
     val id: String,
     val name: String,
     val roleColorArgb: Long,
-    val targetOffset: SpatialPoint,
+    val targetPoint: SpatialPoint,
     val style: PillProjectionStyle
-)
+) {
+    constructor(
+        id: String,
+        name: String,
+        roleColor: Color,
+        targetOffset: Offset,
+        style: PillProjectionStyle
+    ) : this(
+        id = id,
+        name = name,
+        roleColorArgb = roleColor.value.toLong(),
+        targetPoint = SpatialPoint(targetOffset.x, targetOffset.y),
+        style = style
+    )
+
+    val roleColor: Color get() = Color(roleColorArgb.toULong())
+    val targetOffset: Offset get() = Offset(targetPoint.x, targetPoint.y)
+}
 
 /**
  * Target document object highlighted by the volumetric projection cone.
@@ -409,11 +429,28 @@ data class ProjectedPillInstance(
 @Serializable
 data class TargetConeHighlight(
     val label: String,
-    val targetOffset: SpatialPoint,
+    val targetPoint: SpatialPoint,
     val targetWidth: Float,
     val targetHeight: Float,
     val colorArgb: Long = 0xFFF97316L
-)
+) {
+    constructor(
+        label: String,
+        targetOffset: Offset,
+        targetSize: Size,
+        color: Color = Color(0xFFF97316)
+    ) : this(
+        label = label,
+        targetPoint = SpatialPoint(targetOffset.x, targetOffset.y),
+        targetWidth = targetSize.width,
+        targetHeight = targetSize.height,
+        colorArgb = color.value.toLong()
+    )
+
+    val targetOffset: Offset get() = Offset(targetPoint.x, targetPoint.y)
+    val targetSize: Size get() = Size(targetWidth, targetHeight)
+    val color: Color get() = Color(colorArgb.toULong())
+}
 
 /**
  * Recorded multi-turn interaction entry for Mode c (Conversation History).

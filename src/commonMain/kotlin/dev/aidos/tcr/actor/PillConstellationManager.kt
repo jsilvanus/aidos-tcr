@@ -133,9 +133,10 @@ class PillConstellationManager(
         actorRole: ActorRole,
         actionName: String,
         details: String,
-        status: HappeningsEvent.EventStatus = HappeningsEvent.EventStatus.COMMITTED
+        status: HappeningsEvent.EventStatus = HappeningsEvent.EventStatus.COMMITTED,
+        actorColorArgb: Long? = null
     ) {
-        val resolvedColor = when (actorRole) {
+        val resolvedColor = actorColorArgb ?: when (actorRole) {
             ActorRole.ORCHESTRATOR_DICTATION -> _orchestratorConfig.value.colorArgb
             ActorRole.DETERMINISTIC_EDITOR -> _editorConfig.value.colorArgb
             ActorRole.GENERATIVE_AI -> _aiConfig.value.colorArgb
