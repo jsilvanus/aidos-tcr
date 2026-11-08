@@ -1,0 +1,159 @@
+package dev.aidos.tcr.generative
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import dev.aidos.tcr.mesh.ApprovalCard
+import dev.aidos.tcr.mesh.CalendarCopilotCard
+import dev.aidos.tcr.mesh.MessageBubble
+import dev.aidos.tcr.model.AssertionLevel
+import dev.aidos.tcr.model.AttachmentType
+import dev.aidos.tcr.model.AudioPlaybackUiState
+import dev.aidos.tcr.model.DisclosureStatus
+import dev.aidos.tcr.model.MeshProvenanceType
+import dev.aidos.tcr.model.PrivacyLevel
+import dev.aidos.tcr.model.TimelineItemUiModel
+import dev.aidos.tcr.model.UniversalEnvelope
+
+/**
+ * Generative UI Component Dispatcher & Renderer.
+ *
+ * Bridges Universal Agentic Envelopes (UAE) and autonomous agent output
+ * to rich, interactive Compose Multiplatform components.
+ *
+ * Used inside:
+ * 1) Aidos Desktop: Infinite Canvas spatial nodes, execution graph inspection, and generative cards.
+ * 2) Agentic Messenger Standalone: Dynamic timeline rendering.
+ */
+object GenerativeUiRegistry {
+
+    /**
+     * Map a UniversalEnvelope into its corresponding TimelineItemUiModel.
+     */
+    fun mapEnvelopeToTimelineItem(envelope: UniversalEnvelope): TimelineItemUiModel {
+        val provenanceType = when {
+            envelope.policy.privacyLevel == PrivacyLevel.HUMAN_ONLY -> MeshProvenanceType.HUMAN_ONLY_E2EE
+            envelope.provenance.assertionLevel == AssertionLevel.ORIGINAL_HUMAN -> MeshProvenanceType.HUMAN_DIRECT
+            envelope.provenance.assertionLevel == AssertionLevel.AGENT_SYNTHESIZED -> MeshProvenanceType.AGENT_RUNNER
+            else -> MeshProvenanceType.SYSTEM_SERVICE
+        }
+
+        // Check if there is an escrowed topic request in annotations
+        val isEscrowRequest = envelope.payload.structuredAnnotations.any { it.type == "escalation_request" }
+        if (isEscrowRequest) {
+            val req = envelope.payload.structuredAnnotations.first { it.type == "escalation_request" }
+            return TimelineItemUiModel.ProgressiveDisclosureRequest(
+                id = envelope.envelopeId,
+                timestamp = envelope.timestamp,
+                requestId = req.attributes["request_id"] ?: envelope.envelopeId,
+                requester = envelope.routing.sender,
+                topicKey = req.attributes["topic"] ?: "UNKNOWN_TOPIC",
+                promptText = envelope.payload.naturalLanguage,
+                proposedPayloadSnippet = req.attributes["preview_value"],
+                status = DisclosureStatus.PENDING
+            )
+        }
+
+        // Check if there is a calendar action
+        val isCalendarProposal = envelope.payload.structuredAnnotations.any { it.type == "calendar_proposal" }
+        if (isCalendarProposal) {
+            val cal = envelope.payload.structuredAnnotations.first { it.type == "calendar_proposal" }
+            return TimelineItemUiModel.CalendarProposal(
+                id = envelope.envelopeId,
+                timestamp = envelope.timestamp,
+                eventTitle = cal.attributes["title"] ?: "Meeting",
+                proposedTime = cal.attributes["time"] ?: "TBD",
+                conflictSummary = cal.attributes["conflict"],
+                isActionTaken = false
+            )
+        }
+
+        // Standard Message turn
+        val cues = envelope.payload.structuredAnnotations.mapNotNull { it.attributes["cue"] }
+        val localNotice = if (envelope.payload.structuredAnnotations.any { it.type == "local_inference" }) {
+            "Answered locally from cached envelope (zero network ping)"
+        } else null
+
+        val voiceAttachment = envelope.payload.attachments.firstOrNull { it.type == AttachmentType.VOICE_NOTE }
+        val isShieldedVoice = (envelope.policy.privacyLevel == PrivacyLevel.HUMAN_ONLY && voiceAttachment != null)
+        val audioPlaybackState = if (voiceAttachment != null) {
+            AudioPlaybackUiState(
+                audioUrl = voiceAttachment.blobUri ?: "inline:${voiceAttachment.id}",
+                durationMs = voiceAttachment.durationMs ?: 3000L,
+                currentPositionMs = 0L,
+                isPlaying = false,
+                amplitudes = listOf(0.3f, 0.6f, 0.8f, 0.4f, 0.9f, 0.7f, 0.5f, 0.2f, 0.6f, 0.4f)
+            )
+        } else null
+
+        return TimelineItemUiModel.Message(
+            id = envelope.envelopeId,
+            timestamp = envelope.timestamp,
+            sender = envelope.routing.sender,
+            provenanceType = provenanceType,
+            provenanceRecord = envelope.provenance,
+            privacyLevel = envelope.policy.privacyLevel,
+            naturalText = envelope.payload.naturalLanguage,
+            cueWords = cues,
+            annotations = envelope.payload.structuredAnnotations,
+            localInferenceNote = localNotice,
+            audioPlayback = audioPlaybackState,
+            attachments = envelope.payload.attachments,
+            isShieldedVoice = isShieldedVoice,
+            shieldedSttTranscript = if (isShieldedVoice) envelope.payload.naturalLanguage else null,
+            isSttVisible = true,
+            isUnshieldedForAi = false
+        )
+    }
+
+    /**
+     * Composable dispatcher rendering any TimelineItemUiModel as an atomic/molecular UI block.
+     */
+    @Composable
+    fun RenderItem(
+        item: TimelineItemUiModel,
+        currentUserId: String,
+        modifier: Modifier = Modifier,
+        onApproveDisclosure: (requestId: String) -> Unit = {},
+        onDeclineDisclosure: (requestId: String) -> Unit = {},
+        onConfirmCalendar: () -> Unit = {},
+        onToggleAudio: () -> Unit = {},
+        onToggleStt: (messageId: String) -> Unit = {},
+        onUnshieldForAi: (messageId: String) -> Unit = {}
+    ) {
+        when (item) {
+            is TimelineItemUiModel.Message -> {
+                val isSelf = item.sender.principalId == currentUserId
+                MessageBubble(
+                    message = item,
+                    isSelf = isSelf,
+                    modifier = modifier,
+                    onToggleAudio = onToggleAudio,
+                    onToggleStt = onToggleStt,
+                    onUnshieldForAi = onUnshieldForAi
+                )
+            }
+            is TimelineItemUiModel.ProgressiveDisclosureRequest -> {
+                ApprovalCard(
+                    requestId = item.requestId,
+                    topicKey = item.topicKey,
+                    promptText = item.promptText,
+                    proposedValue = item.proposedPayloadSnippet,
+                    status = item.status,
+                    modifier = modifier,
+                    onApprove = onApproveDisclosure,
+                    onDecline = onDeclineDisclosure
+                )
+            }
+            is TimelineItemUiModel.CalendarProposal -> {
+                CalendarCopilotCard(
+                    eventTitle = item.eventTitle,
+                    proposedTime = item.proposedTime,
+                    conflictSummary = item.conflictSummary,
+                    isActionTaken = item.isActionTaken,
+                    modifier = modifier,
+                    onConfirmAction = onConfirmCalendar
+                )
+            }
+        }
+    }
+}
