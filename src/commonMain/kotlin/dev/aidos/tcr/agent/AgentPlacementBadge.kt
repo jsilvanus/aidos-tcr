@@ -84,3 +84,34 @@ fun AgentPlacementBadge(
         }
     }
 }
+
+/**
+ * Atomic TCR Component: VirtualModelBadge
+ *
+ * Displays a badge indicating a virtual model dynamically resolved across
+ * trusted inference group peers (RFC-0105).
+ */
+@Composable
+fun VirtualModelBadge(
+    modelId: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(TcrColors.ElectricBlue.copy(alpha = 0.12f), RoundedCornerShape(4.dp))
+            .border(1.dp, TcrColors.ElectricBlue.copy(alpha = 0.4f), RoundedCornerShape(4.dp))
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(text = "🌐", fontSize = 10.sp)
+        Text(
+            text = "Virtual Peer Model ($modelId)",
+            fontSize = 10.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = FontFamily.Monospace,
+            color = TcrColors.ElectricBlue
+        )
+    }
+}
+

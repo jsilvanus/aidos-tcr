@@ -215,3 +215,80 @@ data class AgentRuntimeOverviewStats(
     val runsByApp: Map<String, Int> = emptyMap(),
     val totalEgressCalls: Int = 0
 )
+
+/**
+ * Tab selection for filtering agent runs by execution status.
+ */
+enum class AgentFilterTab(val label: String) {
+    ALL("All"),
+    ACTIVE("Active"),
+    AWAITING_TOOLS("Waiting on Tools"),
+    COMPLETED("Completed"),
+    FAILED("Failed / Cancelled")
+}
+
+/**
+ * Display layout mode for the Agent Overview pane.
+ */
+enum class AgentViewLayout(val label: String) {
+    HIERARCHY("🌳 Subagent Hierarchy"),
+    FLAT("📋 Flat Feed")
+}
+
+/**
+ * Filter option for execution placement (RFC-0104).
+ */
+enum class PlacementFilterOption(val label: String, val placement: AgentPlacement?) {
+    ALL("All Placements", null),
+    LOCAL("🟢 Local (Device)", AgentPlacement.LOCAL),
+    CLUSTER("🔵 Cluster (Peer)", AgentPlacement.CLUSTER),
+    REMOTE("🟣 Remote (Cloud)", AgentPlacement.REMOTE)
+}
+
+/**
+ * UI State for the agent runtime overview pane.
+ */
+@Serializable
+data class AgentOverviewUiState(
+    val stats: AgentRuntimeOverviewStats = AgentRuntimeOverviewStats(),
+    val runs: List<AgentRunUiModel> = emptyList(),
+    val selectedAppFilter: String? = null,
+    val selectedStatusFilter: AgentFilterTab = AgentFilterTab.ALL,
+    val selectedPlacementFilter: AgentPlacement? = null,
+    val selectedViewLayout: AgentViewLayout = AgentViewLayout.HIERARCHY,
+    val searchQuery: String = "",
+    val isEngineRunning: Boolean = true,
+    val selectedRunId: String? = null,
+)
+
+/**
+ * Predicate checking whether an agent run matches a search query across ID, app, prompt, brief, tools, or tasks.
+ */
+fun AgentRunUiModel.matchesSearch(query: String): Boolean {
+    val q = query.trim()
+    if (q.isEmpty()) return true
+    return runId.contains(q, ignoreCase = true) ||
+        ownerApp.contains(q, ignoreCase = true) ||
+        modelId.contains(q, ignoreCase = true) ||
+        promptPreview.contains(q, ignoreCase = true) ||
+        replyText.contains(q, ignoreCase = true) ||
+        (workerBrief?.contains(q, ignoreCase = true) == true) ||
+        executedTools.any { it.toolName.contains(q, ignoreCase = true) || it.argumentsJson.contains(q, ignoreCase = true) } ||
+        tasks.any { it.description.contains(q, ignoreCase = true) || (it.toolName?.contains(q, ignoreCase = true) == true) }
+}
+
+/**
+ * Human-readable execution duration formatter.
+ */
+fun formatDuration(startedAt: Long?, finishedAt: Long?): String {
+    if (startedAt == null || startedAt == 0L) return "Unknown"
+    val end = if (finishedAt != null && finishedAt > 0L) finishedAt else startedAt
+    val millis = (end - startedAt).coerceAtLeast(0)
+    val seconds = millis / 1000
+    return when {
+        seconds < 1 -> "${millis}ms"
+        seconds < 60 -> "${seconds}s"
+        else -> "${seconds / 60}m ${seconds % 60}s"
+    }
+}
+
