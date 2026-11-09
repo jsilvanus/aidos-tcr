@@ -97,6 +97,13 @@ fun AgentRunCard(
                         )
                     }
 
+                    // Agent Role Badge (RFC-0011 Driver / Worker)
+                    AgentRoleBadge(
+                        role = run.role,
+                        parentSessionId = run.parentSessionId,
+                        workerBrief = run.workerBrief
+                    )
+
                     // Run ID
                     Text(
                         text = "ID: ${run.runId.take(12)}…",
@@ -181,6 +188,74 @@ fun AgentRunCard(
                         )
                     }
                 }
+            }
+
+            // Parked on Child Worker Run (RFC-0011 continuation)
+            if (run.isParkedOnChild) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFFEF3C7).copy(alpha = 0.7f), RoundedCornerShape(6.dp))
+                        .border(1.dp, Color(0xFFD97706), RoundedCornerShape(6.dp))
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(text = "⏸️", fontSize = 14.sp)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Parked on Subagent Worker",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF92400E)
+                        )
+                        Text(
+                            text = "Awaiting child worker run ${run.awaitingChildRunId?.take(12) ?: "execution"} to finish before resuming.",
+                            fontSize = 10.sp,
+                            color = Color(0xFFB45309)
+                        )
+                    }
+                }
+            }
+
+            // Task Graph (DAG) Progress Summary (RFC-0019)
+            if (run.tasks.isNotEmpty()) {
+                val completedTasks = run.tasks.count { it.state == "COMPLETED" }
+                val skippedTasks = run.tasks.count { it.state == "SKIPPED" }
+                val totalTasks = run.tasks.size
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.03f), RoundedCornerShape(6.dp))
+                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(text = "⚡", fontSize = 12.sp)
+                        Text(
+                            text = "Execution Graph: $completedTasks/$totalTasks completed",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF374151)
+                        )
+                    }
+                    if (skippedTasks > 0) {
+                        Text(
+                            text = "($skippedTasks skipped)",
+                            fontSize = 10.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+
+            // Worker Outcome Commit Summary (RFC-0011)
+            run.workerOutcome?.let { outcome ->
+                WorkerOutcomeCard(outcome = outcome)
             }
 
             // Outside Connections / Egress Telemetry (RFC-0042)

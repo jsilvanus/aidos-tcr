@@ -93,6 +93,79 @@ data class PendingToolCallUi(
 )
 
 /**
+ * Agent role according to RFC-0011 (Driver vs Worker).
+ */
+@Serializable
+enum class AgentRoleUi(val wire: String, val label: String, val badgeEmoji: String) {
+    DRIVER("DRIVER", "Driver", "👑"),
+    WORKER("WORKER", "Worker", "🛠️");
+
+    companion object {
+        fun fromWire(wire: String?): AgentRoleUi =
+            entries.firstOrNull { it.wire.equals(wire, ignoreCase = true) } ?: DRIVER
+    }
+}
+
+/**
+ * Single node in the execution graph DAG (RFC-0019, RFC-0011).
+ */
+@Serializable
+data class TaskGraphNodeUi(
+    val taskId: String,
+    val ordinal: Int,
+    val kind: String,
+    val description: String,
+    val state: String,
+    val dependsOnTaskIds: List<String> = emptyList(),
+    val toolName: String? = null,
+    val awaitingRunId: String? = null,
+) {
+    val isTerminal: Boolean
+        get() = state == "COMPLETED" || state == "FAILED" || state == "CANCELLED" || state == "SKIPPED"
+    val isSkipped: Boolean get() = state == "SKIPPED"
+    val isRunning: Boolean get() = state == "RUNNING"
+    val isParked: Boolean get() = state == "AWAITING_INPUT" || state == "AWAITING_APPROVAL"
+}
+
+/**
+ * Worker session spawn metadata for COMPOSITE tasks (RFC-0011).
+ */
+@Serializable
+data class WorkerSpawnUi(
+    val taskId: String,
+    val workerSessionId: String? = null,
+    val childRunId: String? = null,
+    val brief: String,
+    val budgetSplitWays: Int = 1,
+    val delegatedCapabilities: List<String> = emptyList(),
+)
+
+/**
+ * Budget and quota limits (RFC-0028).
+ */
+@Serializable
+data class AgentBudgetUi(
+    val modelCalls: Int? = null,
+    val inputTokens: Long? = null,
+    val outputTokens: Long? = null,
+    val costUnits: Long? = null,
+    val steps: Int? = null,
+    val maxSteps: Int? = null,
+    val splitWays: Int? = null,
+)
+
+/**
+ * Worker Git commit outcome record (refs/aidos/workers/<workerSessionId>).
+ */
+@Serializable
+data class WorkerOutcomeUi(
+    val workerSessionId: String,
+    val commitRef: String,
+    val outcomeSummary: String,
+    val committedAt: String? = null,
+)
+
+/**
  * UI representation of an Agent Run.
  */
 @Serializable
@@ -113,7 +186,18 @@ data class AgentRunUiModel(
     val executedTools: List<ExecutedToolCallUi> = emptyList(),
     val egressSummary: AgentEgressSummaryUi = AgentEgressSummaryUi(),
     val startedAt: Long = 0L,
-    val finishedAt: Long = 0L
+    val finishedAt: Long = 0L,
+    // RFC-0011 Driver/Worker Orchestration and RFC-0019 Execution DAG extensions:
+    val role: AgentRoleUi = AgentRoleUi.DRIVER,
+    val parentSessionId: String? = null,
+    val parentRunId: String? = null,
+    val workerBrief: String? = null,
+    val tasks: List<TaskGraphNodeUi> = emptyList(),
+    val workerSpawns: List<WorkerSpawnUi> = emptyList(),
+    val budget: AgentBudgetUi? = null,
+    val workerOutcome: WorkerOutcomeUi? = null,
+    val isParkedOnChild: Boolean = false,
+    val awaitingChildRunId: String? = null,
 )
 
 /**
