@@ -141,7 +141,7 @@ val TcrShapes = Shapes(
     large = RoundedCornerShape(16.dp)
 )
 
-val TcrTypography = Typography(
+val TcrMaterialTypography = Typography(
     titleMedium = TextStyle(
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
@@ -172,7 +172,7 @@ fun TcrTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = TcrTypography,
+            typography = TcrMaterialTypography,
             shapes = TcrShapes,
             content = content
         )
