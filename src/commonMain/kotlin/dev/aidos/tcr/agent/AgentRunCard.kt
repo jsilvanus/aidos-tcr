@@ -31,6 +31,7 @@ import dev.aidos.tcr.theme.TcrColors
  * - Pending tool calls & executed tool history
  * - Cancellation action
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AgentRunCard(
     run: AgentRunUiModel,
@@ -138,12 +139,18 @@ fun AgentRunCard(
                 }
             }
 
-            // Model Placement Badge (RFC-0104)
-            AgentPlacementBadge(
-                modelId = run.modelId,
-                placement = run.placement,
-                locality = run.locality
-            )
+            // Model Placement Badge (RFC-0104) + Guardian / Main-Chosen / Enforced Locality Badges
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                AgentPlacementBadge(
+                    modelId = run.modelId,
+                    placement = run.placement,
+                    locality = run.locality
+                )
+                TcrRunPolicyBadges(run = run)
+            }
 
             // Prompt Preview
             if (run.promptPreview.isNotBlank()) {

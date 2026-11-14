@@ -14,6 +14,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.aidos.tcr.agent.AgentLocality
+import dev.aidos.tcr.agent.TcrGuardianConfigUiModel
+import dev.aidos.tcr.agent.TcrGuardianModelsCard
+import dev.aidos.tcr.agent.TcrLocalitySelector
+import dev.aidos.tcr.agent.TcrModelSelectionField
+import dev.aidos.tcr.agent.TcrTaintApprovalPolicy
+import dev.aidos.tcr.theme.TcrColors
 
 /**
  * Organism TCR Component: SettingsContent
@@ -37,6 +44,23 @@ fun SettingsContent(
     onSetRamBaselineNow: (() -> Unit)? = null,
     onClearRamBaseline: (() -> Unit)? = null,
     engineCacheDir: String? = null,
+    globalMainModelId: String = "",
+    globalDefaultRunModelId: String = "",
+    globalLocality: AgentLocality = AgentLocality.ANY,
+    guardianConfig: TcrGuardianConfigUiModel? = null,
+    availableLlmModels: List<String> = emptyList(),
+    onGlobalMainModelChange: (String) -> Unit = {},
+    onGlobalDefaultRunModelChange: (String) -> Unit = {},
+    onGlobalLocalityChange: (AgentLocality) -> Unit = {},
+    onGlobalGuardianPolicyChange: (TcrTaintApprovalPolicy) -> Unit = {},
+    onGlobalDecisionModelChange: (String) -> Unit = {},
+    onGlobalGuardianLlmChange: (String) -> Unit = {},
+    showModelRoutingSettings: Boolean = (
+        guardianConfig != null ||
+            globalMainModelId.isNotBlank() ||
+            globalDefaultRunModelId.isNotBlank() ||
+            globalLocality != AgentLocality.ANY
+        ),
 ) {
     Column(
         modifier = modifier
@@ -191,6 +215,69 @@ fun SettingsContent(
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text("Cache Directory", fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
                     Text(dir, fontSize = 11.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        }
+
+        if (showModelRoutingSettings) {
+            val effectiveGuardianConfig = guardianConfig ?: TcrGuardianConfigUiModel()
+            val mergedLlmModels = (availableLlmModels + effectiveGuardianConfig.availableLlmModels).distinct()
+            val cardGuardianConfig = if (effectiveGuardianConfig.availableLlmModels.isEmpty() && mergedLlmModels.isNotEmpty()) {
+                effectiveGuardianConfig.copy(availableLlmModels = mergedLlmModels)
+            } else {
+                effectiveGuardianConfig
+            }
+
+            OutlinedCard(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+            ) {
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("Global Model Routing & Guardian Defaults", fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+                    Text(
+                        "Default model selection, enforced running place, and Guardian safety gate used when projects do not specify overrides.",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+
+                    TcrModelSelectionField(
+                        label = "Global Main Model",
+                        value = globalMainModelId,
+                        onValueChange = onGlobalMainModelChange,
+                        placeholder = "Select or enter default main model ID",
+                        availableModels = mergedLlmModels,
+                        accentColor = TcrColors.ElectricBlue,
+                    )
+
+                    TcrModelSelectionField(
+                        label = "Global Default Model for Runs",
+                        value = globalDefaultRunModelId,
+                        onValueChange = onGlobalDefaultRunModelChange,
+                        placeholder = "Same as Main Model",
+                        availableModels = mergedLlmModels,
+                        defaultChipLabel = if (mergedLlmModels.isNotEmpty() || globalDefaultRunModelId.isNotBlank()) {
+                            "Same as Main"
+                        } else {
+                            null
+                        },
+                        accentColor = TcrColors.ElectricBlue,
+                    )
+
+                    TcrLocalitySelector(
+                        selected = globalLocality,
+                        onSelect = { locality -> if (locality != null) onGlobalLocalityChange(locality) },
+                        allowInherit = false,
+                        label = "Global Enforced Running Place",
+                    )
+
+                    TcrGuardianModelsCard(
+                        config = cardGuardianConfig,
+                        onPolicyChange = onGlobalGuardianPolicyChange,
+                        onDecisionModelChange = onGlobalDecisionModelChange,
+                        onGuardianLlmChange = onGlobalGuardianLlmChange,
+                        title = "Global Guardian Defaults",
+                    )
                 }
             }
         }

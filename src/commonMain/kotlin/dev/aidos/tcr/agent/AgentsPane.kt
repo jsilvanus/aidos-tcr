@@ -46,6 +46,15 @@ fun AgentsPane(
     onCancelRun: (String) -> Unit,
     onInspectRun: (String?) -> Unit,
     modifier: Modifier = Modifier,
+    onMainModelChange: (String) -> Unit = {},
+    onDefaultRunModelChange: (String) -> Unit = {},
+    onProjectLocalityChange: (AgentLocality) -> Unit = {},
+    onProjectGuardianPolicyChange: (TcrTaintApprovalPolicy) -> Unit = {},
+    onDecisionModelChange: (String) -> Unit = {},
+    onGuardianLlmChange: (String) -> Unit = {},
+    onRunGuardianPolicyOverride: (TcrTaintApprovalPolicy?) -> Unit = {},
+    onRunModelOverride: (String) -> Unit = {},
+    onRunLocalityOverride: (AgentLocality?) -> Unit = {},
 ) {
     val selectedRun = state.selectedRunId?.let { id -> state.runs.firstOrNull { it.runId == id } }
 
@@ -81,6 +90,33 @@ fun AgentsPane(
         // 1. Overview Telemetry Banner
         item {
             AgentStatsBanner(stats = state.stats)
+        }
+
+        // 1b. Project Model Routing & Per-Run Overrides (when configured)
+        state.projectConfig?.let { projectConfig ->
+            item(key = "project_model_routing") {
+                TcrProjectModelRoutingCard(
+                    config = projectConfig,
+                    onMainModelChange = onMainModelChange,
+                    onDefaultRunModelChange = onDefaultRunModelChange,
+                    onLocalityChange = onProjectLocalityChange,
+                    onGuardianPolicyChange = onProjectGuardianPolicyChange,
+                    onDecisionModelChange = onDecisionModelChange,
+                    onGuardianLlmChange = onGuardianLlmChange,
+                )
+            }
+            item(key = "run_launch_config_bar") {
+                TcrRunConfigBar(
+                    config = state.runLaunchConfig,
+                    effectivePolicy = projectConfig.guardianConfig.policy,
+                    effectiveModelId = projectConfig.defaultRunModelId.ifBlank { projectConfig.mainModelId },
+                    effectiveLocality = projectConfig.enforcedLocality,
+                    availableLlmModels = projectConfig.availableLlmModels,
+                    onGuardianPolicyOverride = onRunGuardianPolicyOverride,
+                    onRunModelOverride = onRunModelOverride,
+                    onLocalityOverride = onRunLocalityOverride,
+                )
+            }
         }
 
         // 2. Search Field
@@ -551,6 +587,10 @@ private fun AgentInspectionDialog(
                             modelId = run.modelId,
                             placement = run.placement,
                             locality = run.locality
+                        )
+                        TcrRunPolicyBadges(
+                            run = run,
+                            modifier = Modifier.padding(top = 6.dp)
                         )
                     }
 

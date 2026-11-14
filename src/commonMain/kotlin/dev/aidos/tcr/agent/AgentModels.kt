@@ -1,5 +1,6 @@
 package dev.aidos.tcr.agent
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
 /**
@@ -29,6 +30,60 @@ enum class AgentLocality(val wire: String, val label: String) {
         fun fromWire(wire: String): AgentLocality = entries.firstOrNull { it.wire.equals(wire, ignoreCase = true) } ?: ANY
     }
 }
+
+/**
+ * Taint approval policy controlling whether tainted operations require
+ * explicit human confirmation ([MANUAL]) or automated Guardian Gate A + Gate B
+ * intent-alignment verification ([GUARDIAN]).
+ */
+@Serializable
+enum class TcrTaintApprovalPolicy {
+    MANUAL,
+    GUARDIAN,
+}
+
+/**
+ * Configuration for the two-gate Guardian safety verification pipeline
+ * (Gate A decision classifier + Gate B intent-alignment LLM).
+ */
+@Immutable
+@Serializable
+data class TcrGuardianConfigUiModel(
+    val policy: TcrTaintApprovalPolicy = TcrTaintApprovalPolicy.MANUAL,
+    val decisionModelId: String = "laya-multilingual",
+    val guardianLlmModelId: String = "",
+    val availableDecisionModels: List<String> = emptyList(),
+    val availableLlmModels: List<String> = emptyList(),
+)
+
+/**
+ * Project-level model routing, locality enforcement ceiling, and Guardian policy configuration.
+ */
+@Immutable
+@Serializable
+data class TcrProjectModelConfigUiModel(
+    val projectId: String = "",
+    val projectName: String = "",
+    val mainModelId: String = "",
+    val defaultRunModelId: String = "",
+    val allowMainModelRunOverride: Boolean = true,
+    val enforcedLocality: AgentLocality = AgentLocality.ANY,
+    val guardianConfig: TcrGuardianConfigUiModel = TcrGuardianConfigUiModel(),
+    val availableLlmModels: List<String> = emptyList(),
+    val availableDecisionModels: List<String> = emptyList(),
+)
+
+/**
+ * Per-run launch overrides applied on top of [TcrProjectModelConfigUiModel].
+ * Null or blank overrides inherit the active project defaults.
+ */
+@Immutable
+@Serializable
+data class TcrRunLaunchConfigUiModel(
+    val guardianPolicyOverride: TcrTaintApprovalPolicy? = null,
+    val runModelOverride: String = "",
+    val localityOverride: AgentLocality? = null,
+)
 
 /**
  * Execution status of an agent run task.
@@ -198,6 +253,9 @@ data class AgentRunUiModel(
     val workerOutcome: WorkerOutcomeUi? = null,
     val isParkedOnChild: Boolean = false,
     val awaitingChildRunId: String? = null,
+    val guardianPolicy: TcrTaintApprovalPolicy = TcrTaintApprovalPolicy.MANUAL,
+    val modelChosenByMainModel: Boolean = false,
+    val enforcedLocality: AgentLocality? = null,
 )
 
 /**
@@ -259,6 +317,8 @@ data class AgentOverviewUiState(
     val searchQuery: String = "",
     val isEngineRunning: Boolean = true,
     val selectedRunId: String? = null,
+    val projectConfig: TcrProjectModelConfigUiModel? = null,
+    val runLaunchConfig: TcrRunLaunchConfigUiModel = TcrRunLaunchConfigUiModel(),
 )
 
 /**
