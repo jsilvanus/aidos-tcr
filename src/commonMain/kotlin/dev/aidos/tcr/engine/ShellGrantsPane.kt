@@ -33,6 +33,8 @@ data class ShellGrantsUiState(
     val sessions: List<ShellSessionUi> = emptyList(),
     val selectedSessionId: String? = null,
     val grants: List<ShellGrantUi> = emptyList(),
+    /** Which Agent runtime the grants go to: the running daemon, or this app's own (RFC-0115). */
+    val runtimeNote: String? = null,
     val error: String? = null,
 )
 
@@ -74,6 +76,7 @@ fun ShellGrantsPane(
 
     LazyColumn(modifier = modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         state.error?.let { item { Text(it, color = TcrColors.EmberRed, fontSize = 12.sp) } }
+        state.runtimeNote?.let { item { Text(it, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant) } }
 
         item { Text("Projects", fontWeight = FontWeight.SemiBold) }
         if (state.projects.isEmpty()) {
