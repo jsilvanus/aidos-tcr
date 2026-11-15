@@ -31,10 +31,26 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
         }
 
+        val jvmTest by getting {
+            dependencies {
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
+            }
+        }
+
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
             }
         }
     }
+}
+
+tasks.withType<Test>().configureEach {
+    // The manifest tests read these files directly, so they must invalidate Gradle's test cache.
+    inputs.dir("manifest")
+    inputs.file("README.md")
+    inputs.dir("src/commonMain/kotlin")
+    // Lets `-Dtcr.updateManifest=true` reach the test JVM (see ManifestSyncTest).
+    System.getProperty("tcr.updateManifest")?.let { systemProperty("tcr.updateManifest", it) }
 }
