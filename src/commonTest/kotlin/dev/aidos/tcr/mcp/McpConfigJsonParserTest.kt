@@ -99,6 +99,30 @@ class McpConfigJsonParserTest {
     }
 
     @Test
+    fun parsesBinderMcpServerJsonConfiguration() {
+        val cert = "AB".repeat(32)
+        val input = """
+        {
+          "name": "amp",
+          "transport": "binder",
+          "packageName": "com.agenticmessenger.mcp.host",
+          "serviceClass": "com.agenticmessenger.mcp.android.AmpMcpBinderService",
+          "signingCertSha256": ["$cert"]
+        }
+        """.trimIndent()
+
+        val result = McpConfigJsonParser.parse(input)
+        assertIs<McpJsonParseResult.Success>(result)
+        val server = result.servers.single()
+        assertEquals("amp", server.name)
+        assertEquals("binder", server.transport)
+        assertEquals("com.agenticmessenger.mcp.host", server.packageName)
+        assertEquals("com.agenticmessenger.mcp.android.AmpMcpBinderService", server.serviceClass)
+        assertEquals(setOf("ab".repeat(32)), server.signingCertSha256)
+        assertEquals(setOf("MOBILE"), server.profiles)
+    }
+
+    @Test
     fun reportsClearErrorWhenInputIsInvalidOrEmpty() {
         val emptyResult = McpConfigJsonParser.parse("   ")
         assertIs<McpJsonParseResult.Error>(emptyResult)

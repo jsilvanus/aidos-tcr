@@ -3181,7 +3181,7 @@
       "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpServersPane.kt",
       "status": "STABLE",
       "contract": "1.0.0",
-      "summary": "Organism TCR Component: McpServersPane MCP Server & Tool Adoption Management Dashboard (RFC-0031, RFC-0054).",
+      "summary": "Organism TCR Component: McpServersPane MCP Server & Tool Adoption Management Pane (RFC-0031, RFC-0054).",
       "signature": [
         "state: McpUiState",
         "onAddServer: (ParsedMcpServerConfig) -> Unit",
@@ -3255,7 +3255,7 @@
       "domain": "mcp",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
       "status": "EXPERIMENTAL",
-      "contract": "0.1.0",
+      "contract": "0.2.0",
       "summary": "Parsed MCP server configuration extracted from user input or pasted JSON.",
       "signature": [
         "name: String",
@@ -3263,6 +3263,9 @@
         "command: String? =",
         "args: List<String> =",
         "endpointUrl: String? =",
+        "packageName: String? =",
+        "serviceClass: String? =",
+        "signingCertSha256: Set<String> =",
         "envOrHeaders: Map<String, String> =",
         "profiles: Set<String> ="
       ]
