@@ -159,6 +159,7 @@ val TcrMaterialTypography = Typography(
     )
 )
 
+/** Wraps content in the canonical TCR Material3 theme (colors, shapes, typography). Every consumer app and test fixture wraps its UI in this. */
 @Composable
 fun TcrTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

@@ -154,6 +154,8 @@ Follow this checklist for any UI modification:
 2. **Step 2: Implement in `aidos-tcr` (`commonMain`)**:
    - Create or edit the component in `src/commonMain/kotlin/dev/aidos/tcr/<domain>/`.
    - Wrap interactive previews or test fixtures in `TcrTheme`.
+   - Run `./gradlew jvmTest -Dtcr.updateManifest=true --tests '*ManifestSyncTest*'` to refresh `manifest/tcr-manifest.json` (it versions the component's contract) and commit the diff; see README §4.
+   - Add a test: a Compose UI test in `src/jvmTest/.../ui` for behaviour (callbacks, which controls exist) or a `commonTest` for pure logic.
    - Run verification in `aidos-tcr`:
      ```bash
      cd C:\Users\jsilv\Code\aidos-tcr
