@@ -1642,7 +1642,7 @@
       "domain": "engine",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelDetailContent.kt",
       "status": "STABLE",
-      "contract": "1.0.0",
+      "contract": "1.1.0",
       "summary": "Organism TCR Component: ModelDetailContent Model detail, acquire, and execution diagnostics view: - Artifact format and quantization metadata - Preferred context slider and RAM fit verdict lines - LLa",
       "signature": [
         "state: ModelDetailState",
@@ -1650,7 +1650,9 @@
         "engineState: EngineState",
         "preferredContext: Int",
         "actions: ModelDetailActions",
-        "modifier: Modifier ="
+        "modifier: Modifier =",
+        "licenseAccepted: Boolean =",
+        "onAcceptLicense: (() -> Unit)? ="
       ]
     },
     {
