@@ -56,12 +56,42 @@ object TcrColors {
 
 ---
 
-## 4. Verification
+## 4. Manifest & Versioned Contracts
+
+[`manifest/tcr-manifest.json`](manifest/tcr-manifest.json) is the machine-readable registry: every public
+composable, public function, `data class` and `enum` in `commonMain`, with its domain, `status`
+(`EXPERIMENTAL` / `STABLE` / `DEPRECATED`), a **semver `contract`** version and its normalised
+**signature** (`name: Type`, or `name: Type =` when the parameter has a default). It is derived from
+the source, never hand-written, and `ManifestSyncTest` (part of `jvmTest`, so part of CI) fails when
+source and manifest disagree.
+
+When you add, change or remove a component, regenerate and commit the diff:
+
+```bash
+./gradlew jvmTest --tests '*ManifestSyncTest*' -Dtcr.updateManifest=true
+```
+
+The tool bumps each changed component's `contract` by what the change does to existing callers:
+
+| Change | Bump (≥ 1.0) | Bump (0.x) |
+|---|---|---|
+| New optional parameter appended after all existing ones; new enum entry | minor | patch |
+| Removed / renamed / retyped / reordered parameter, new *required* parameter, parameter lost its default, removed enum entry | major | minor |
+
+`status` is the one field you edit by hand (promote to `STABLE` at contract `1.0.0`; `STABLE` needs a
+KDoc summary). Consumers can read the manifest to find what exists before writing UI, and the
+generative layer (RFC-0051) can validate against it. The scanner understands top-level declarations
+and members of top-level `object`s; overloads get `#2`, `#3` suffixes.
+
+## 5. Verification
 
 Before pushing changes to `aidos-tcr`:
 ```bash
 ./gradlew jvmTest
 ```
+`jvmTest` runs the unit tests (`commonTest`), the manifest/contract checks and the headless Compose UI
+tests (`jvmTest/.../ui`, `runComposeUiTest`), and is exactly what CI runs.
+
 Verify composite consumer builds:
 ```bash
 # In C:\Users\jsilv\Code\aidos:

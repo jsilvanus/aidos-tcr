@@ -1,0 +1,4943 @@
+{
+  "schemaVersion": 1,
+  "library": "dev.aidos.tcr:aidos-tcr",
+  "libraryVersion": "0.1.0",
+  "components": [
+    {
+      "id": "dev.aidos.tcr.actor.ActorPillConfig",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Configuration and customization properties for an Actor Pill.",
+      "signature": [
+        "id: String",
+        "role: ActorRole",
+        "displayName: String",
+        "colorArgb: Long",
+        "defaultGlyph: GlyphType",
+        "isRenameable: Boolean =",
+        "isColorChangeable: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.ActorRole",
+      "kind": "ENUM",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "The functional role and archetype of an Actor Pill.",
+      "signature": [
+        "ORCHESTRATOR_DICTATION",
+        "DETERMINISTIC_EDITOR",
+        "GENERATIVE_AI",
+        "CUSTOM"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.GlyphType",
+      "kind": "ENUM",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Visual glyph / icon represented within the pill.",
+      "signature": [
+        "MIC",
+        "TEXT_CARET",
+        "SPARK",
+        "DELETE",
+        "SCISSORS",
+        "SELECTION",
+        "CHECK",
+        "CLOCK",
+        "QUESTION"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.HappeningsEvent",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Event recorded for the 1-click Happenings HUD.",
+      "signature": [
+        "id: String",
+        "timestampMs: Long",
+        "recognizedUtterance: String",
+        "actorRole: ActorRole",
+        "actorColorArgb: Long",
+        "actionName: String",
+        "details: String",
+        "status: EventStatus"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.OperationSeverity",
+      "kind": "ENUM",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Operation impact severity used by the CadenceEngine to determine human-verification time.",
+      "signature": [
+        "DESTRUCTIVE",
+        "STRUCTURAL",
+        "MINOR"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.PillProjectionEvent",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Active pill projection/spawning event emitted by the orchestrator.",
+      "signature": [
+        "id: String",
+        "sourcePoint: SpatialPoint",
+        "targetPoint: SpatialPoint",
+        "targetPillConfig: ActorPillConfig",
+        "style: PillProjectionStyle",
+        "durationMs: Long =",
+        "progress: Float ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.PillProjectionStyle",
+      "kind": "ENUM",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "3 distinct animation styles for how the Orchestrator (Red Pill) projects a new pill into existence.",
+      "signature": [
+        "BEAM_TELEPORT",
+        "MITOSIS_EJECT",
+        "HOLOGRAPHIC_MATERIALIZE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.PillTargetCone",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Volumetric projection cone emitted by an actor pill (e.g.",
+      "signature": [
+        "pillPosition: SpatialPoint",
+        "targetBounds: TextRangeBounds",
+        "targetRect: SpatialRect",
+        "colorArgb: Long =",
+        "targetLabel: String? =",
+        "isPulsing: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.PipSymbolShape",
+      "kind": "ENUM",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Geometric shape for the indicator dot (pip) in the Actor Pill.",
+      "signature": [
+        "CIRCLE",
+        "DIAMOND",
+        "STAR",
+        "QUESTION",
+        "CHECK",
+        "MIC",
+        "CLOCK"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.ProjectedPillInstance",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Active projected worker pill spawned by the Red Pill Orchestrator.",
+      "signature": [
+        "id: String",
+        "name: String",
+        "roleColorArgb: Long",
+        "targetPoint: SpatialPoint",
+        "style: PillProjectionStyle"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.RedPillHistoryEntry",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Recorded multi-turn interaction entry for Mode c (Conversation History).",
+      "signature": [
+        "id: String",
+        "speaker: String",
+        "text: String",
+        "timestampMs: Long =",
+        "isFromUser: Boolean =",
+        "executedTools: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.RedPillPipState",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Visual and operational state of the Red Pill's indicator pip.",
+      "signature": [
+        "colorArgb: Long =",
+        "shape: PipSymbolShape =",
+        "isPulsing: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.RedPillState",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Complete UI state for the enhanced Red Pill.",
+      "signature": [
+        "textMode: RedPillTextMode =",
+        "thoughtText: String =",
+        "questionPrompt: String =",
+        "pipState: RedPillPipState =",
+        "conversationHistory: List<RedPillTurn> =",
+        "isHovering: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.RedPillTextMode",
+      "kind": "ENUM",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Display modes for textual presentation anchored to an Actor Pill (Red Pill).",
+      "signature": [
+        "NONE",
+        "THOUGHT_BUBBLE",
+        "QUESTION_BUBBLE",
+        "CONVERSATION_HISTORY"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.RedPillTurn",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A recorded conversation turn for the Red Pill's multi-turn history (Mode c).",
+      "signature": [
+        "id: String",
+        "sender: String",
+        "text: String",
+        "timestampMs: Long",
+        "isFromUser: Boolean",
+        "executedTools: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.SpatialPoint",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Spatial coordinate anchor for pills in the editor canvas.",
+      "signature": [
+        "x: Float",
+        "y: Float"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.SpatialRect",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "2D bounding rectangle in document canvas coordinates.",
+      "signature": [
+        "left: Float",
+        "top: Float",
+        "right: Float",
+        "bottom: Float"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.TargetConeHighlight",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Target document object highlighted by the volumetric projection cone.",
+      "signature": [
+        "label: String",
+        "targetPoint: SpatialPoint",
+        "targetWidth: Float",
+        "targetHeight: Float",
+        "colorArgb: Long ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.TextRangeBounds",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Character range in a text document.",
+      "signature": [
+        "startChar: Int",
+        "endChar: Int"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.actor.TranscriptEntry",
+      "kind": "DATA_CLASS",
+      "domain": "actor",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/actor/ActorPillModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Entry for the 2-click 50% split transcript drawer.",
+      "signature": [
+        "id: String",
+        "timestampMs: Long",
+        "speaker: String",
+        "text: String",
+        "confidence: Float",
+        "isFinal: Boolean"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentBudgetMeter",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentBudgetMeter.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR Component: AgentBudgetMeter (RFC-0028 & RFC-0011) Visualizes capability budget allocation and quota consumption: - Reasoning steps spent vs ceiling - Model calls and token bounds - Budget d",
+      "signature": [
+        "budget: AgentBudgetUi",
+        "currentSteps: Int =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentBudgetUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Budget and quota limits (RFC-0028).",
+      "signature": [
+        "modelCalls: Int? =",
+        "inputTokens: Long? =",
+        "outputTokens: Long? =",
+        "costUnits: Long? =",
+        "steps: Int? =",
+        "maxSteps: Int? =",
+        "splitWays: Int? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentEgressRecordUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Outbound connection audit record (RFC-0042 Egress).",
+      "signature": [
+        "destinationHost: String",
+        "method: String =",
+        "requestBytes: Long =",
+        "responseBytes: Long =",
+        "payloadHash: String =",
+        "durationMs: Long =",
+        "outcome: String =",
+        "timestamp: String ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentEgressSummary",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentEgressSummary.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR Component: AgentEgressSummary Visualizes RFC-0042 mediated egress telemetry: - Air-Gapped seal when 0 outside calls were made - Destination host, transfer volumes, and payload SHA-256 hashe",
+      "signature": [
+        "egressSummary: AgentEgressSummaryUi",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentEgressSummaryUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Aggregated network egress telemetry for a single agent turn or run.",
+      "signature": [
+        "totalCalls: Int =",
+        "totalBytesOut: Long =",
+        "totalBytesIn: Long =",
+        "records: List<AgentEgressRecordUi> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentFilterTab",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Tab selection for filtering agent runs by execution status.",
+      "signature": [
+        "ALL",
+        "ACTIVE",
+        "AWAITING_TOOLS",
+        "COMPLETED",
+        "FAILED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentLocality",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Enforced Locality ceiling (RFC-0104).",
+      "signature": [
+        "LOCAL_ONLY",
+        "TRUSTED_CLUSTER",
+        "ANY"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentOverviewUiState",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "UI State for the agent runtime overview pane.",
+      "signature": [
+        "stats: AgentRuntimeOverviewStats =",
+        "runs: List<AgentRunUiModel> =",
+        "selectedAppFilter: String? =",
+        "selectedStatusFilter: AgentFilterTab =",
+        "selectedPlacementFilter: AgentPlacement? =",
+        "selectedViewLayout: AgentViewLayout =",
+        "searchQuery: String =",
+        "isEngineRunning: Boolean =",
+        "selectedRunId: String? =",
+        "projectConfig: TcrProjectModelConfigUiModel? =",
+        "runLaunchConfig: TcrRunLaunchConfigUiModel ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentPlacement",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Model execution placement according to RFC-0104.",
+      "signature": [
+        "LOCAL",
+        "CLUSTER",
+        "REMOTE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentPlacementBadge",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentPlacementBadge.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR Component: AgentPlacementBadge Displays the model name, execution placement (Local, Cluster, Remote), and enforced locality limit according to RFC-0104.",
+      "signature": [
+        "modelId: String",
+        "placement: AgentPlacement",
+        "locality: AgentLocality =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentRoleBadge",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentRoleBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR Component: AgentRoleBadge (RFC-0011) Visual chip representing whether an agent run is a Driver or delegated Worker.",
+      "signature": [
+        "role: AgentRoleUi",
+        "parentSessionId: String? =",
+        "workerBrief: String? =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentRoleUi",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Agent role according to RFC-0011 (Driver vs Worker).",
+      "signature": [
+        "DRIVER",
+        "WORKER"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentRunCard",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentRunCard.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR Component: AgentRunCard Renders a complete Agent Run state card: - Execution state (Running, Awaiting Tools, Completed, Failed, Cancelled) - Owner App identifier badge - Model Placement ",
+      "signature": [
+        "run: AgentRunUiModel",
+        "onCancel: ((String) -> Unit)? =",
+        "onInspect: ((String) -> Unit)? =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentRunStatus",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Execution status of an agent run task.",
+      "signature": [
+        "RUNNING",
+        "TOOL_CALLS",
+        "COMPLETED",
+        "FAILED",
+        "CANCELLED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentRunUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "UI representation of an Agent Run.",
+      "signature": [
+        "runId: String",
+        "ownerApp: String",
+        "modelId: String",
+        "placement: AgentPlacement =",
+        "locality: AgentLocality =",
+        "status: AgentRunStatus =",
+        "seq: Int =",
+        "steps: Int =",
+        "maxSteps: Int =",
+        "promptPreview: String =",
+        "replyText: String =",
+        "errorMessage: String? =",
+        "pendingToolCall: PendingToolCallUi? =",
+        "executedTools: List<ExecutedToolCallUi> =",
+        "egressSummary: AgentEgressSummaryUi =",
+        "startedAt: Long =",
+        "finishedAt: Long =",
+        "role: AgentRoleUi =",
+        "parentSessionId: String? =",
+        "parentRunId: String? =",
+        "workerBrief: String? =",
+        "tasks: List<TaskGraphNodeUi> =",
+        "workerSpawns: List<WorkerSpawnUi> =",
+        "budget: AgentBudgetUi? =",
+        "workerOutcome: WorkerOutcomeUi? =",
+        "isParkedOnChild: Boolean =",
+        "awaitingChildRunId: String? =",
+        "guardianPolicy: TcrTaintApprovalPolicy =",
+        "modelChosenByMainModel: Boolean =",
+        "enforcedLocality: AgentLocality? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentRuntimeOverviewStats",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Runtime overview telemetry & concurrency statistics.",
+      "signature": [
+        "activeRuns: Int =",
+        "maxConcurrentRuns: Int =",
+        "waitingToolCalls: Int =",
+        "completedRuns: Int =",
+        "failedRuns: Int =",
+        "totalRetainedRuns: Int =",
+        "appsCount: Int =",
+        "runsByApp: Map<String, Int> =",
+        "totalEgressCalls: Int ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentStatsBanner",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentStatsBanner.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: AgentStatsBanner Displays top-level Agent Runtime metrics: - Active agents vs concurrency capacity - Runs awaiting tool inputs - Client apps count - Outside network connections",
+      "signature": [
+        "stats: AgentRuntimeOverviewStats",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentTaskGraphView",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentTaskGraphView.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR Component: AgentTaskGraphView (RFC-0019 & RFC-0011) Renders the execution graph DAG: - Tasks in dependency/ordinal sequence with status badges - Cascading SKIPPED indicators when prerequ",
+      "signature": [
+        "tasks: List<TaskGraphNodeUi>",
+        "workerSpawns: List<WorkerSpawnUi> =",
+        "onInspectRun: ((String) -> Unit)? =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentViewLayout",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Display layout mode for the Agent Overview pane.",
+      "signature": [
+        "HIERARCHY",
+        "FLAT"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentsPane",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentsPane.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR Component: AgentsPane Full-featured Agent Runtime control and inspection dashboard: - Runtime concurrency & telemetry overview banner - Multi-criteria filtering: Initiating App, Model Pla",
+      "signature": [
+        "state: AgentOverviewUiState",
+        "onAppFilterSelected: (String?) -> Unit",
+        "onStatusFilterSelected: (AgentFilterTab) -> Unit",
+        "onPlacementFilterSelected: (AgentPlacement?) -> Unit =",
+        "onSearchQueryChanged: (String) -> Unit =",
+        "onResetFilters: () -> Unit =",
+        "onViewLayoutSelected: (AgentViewLayout) -> Unit =",
+        "onCancelRun: (String) -> Unit",
+        "onInspectRun: (String?) -> Unit",
+        "modifier: Modifier =",
+        "onMainModelChange: (String) -> Unit =",
+        "onDefaultRunModelChange: (String) -> Unit =",
+        "onProjectLocalityChange: (AgentLocality) -> Unit =",
+        "onProjectGuardianPolicyChange: (TcrTaintApprovalPolicy) -> Unit =",
+        "onDecisionModelChange: (String) -> Unit =",
+        "onGuardianLlmChange: (String) -> Unit =",
+        "onRunGuardianPolicyOverride: (TcrTaintApprovalPolicy?) -> Unit =",
+        "onRunModelOverride: (String) -> Unit =",
+        "onRunLocalityOverride: (AgentLocality?) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.ExecutedToolCallUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Executed tool call details.",
+      "signature": [
+        "toolName: String",
+        "argumentsJson: String",
+        "resultText: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.PendingToolCallUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Pending tool call awaiting host/client response.",
+      "signature": [
+        "callId: String",
+        "toolName: String",
+        "argumentsJson: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.PlacementFilterOption",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Filter option for execution placement (RFC-0104).",
+      "signature": [
+        "ALL",
+        "LOCAL",
+        "CLUSTER",
+        "REMOTE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.SampleAgentRuns.create",
+      "kind": "FUNCTION",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/SampleAgentRuns.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": []
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TaskGraphNodeUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Single node in the execution graph DAG (RFC-0019, RFC-0011).",
+      "signature": [
+        "taskId: String",
+        "ordinal: Int",
+        "kind: String",
+        "description: String",
+        "state: String",
+        "dependsOnTaskIds: List<String> =",
+        "toolName: String? =",
+        "awaitingRunId: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrGuardianConfigUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Configuration for the two-gate Guardian safety verification pipeline (Gate A decision classifier + Gate B intent-alignment LLM).",
+      "signature": [
+        "policy: TcrTaintApprovalPolicy =",
+        "decisionModelId: String =",
+        "guardianLlmModelId: String =",
+        "availableDecisionModels: List<String> =",
+        "availableLlmModels: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrGuardianModelsCard",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/GuardianAndModelConfigComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR Component: TcrGuardianModelsCard Configures the two-gate Guardian safety verification policy, Gate A decision classifier model, and optional Gate B intent-alignment Guardian LLM.",
+      "signature": [
+        "config: TcrGuardianConfigUiModel",
+        "onPolicyChange: (TcrTaintApprovalPolicy) -> Unit",
+        "onDecisionModelChange: (String) -> Unit",
+        "onGuardianLlmChange: (String) -> Unit",
+        "title: String =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrGuardianPolicySelector",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/GuardianAndModelConfigComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR Component: TcrGuardianPolicySelector Pill/chip selector for taint approval policy (`MANUAL` human gate vs `GUARDIAN` automated Gate A + Gate B intent alignment), with an optional `Inherit` ",
+      "signature": [
+        "selected: TcrTaintApprovalPolicy?",
+        "onSelect: (TcrTaintApprovalPolicy?) -> Unit",
+        "allowInherit: Boolean =",
+        "label: String =",
+        "modifier: Modifier =",
+        "inheritLabel: String ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrLocalitySelector",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/GuardianAndModelConfigComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR Component: TcrLocalitySelector Pill/chip selector for enforced execution locality (`LOCAL` / `CLUSTER` / `REMOTE`), with an optional `Inherit` choice for per-run overrides.",
+      "signature": [
+        "selected: AgentLocality?",
+        "onSelect: (AgentLocality?) -> Unit",
+        "allowInherit: Boolean =",
+        "label: String =",
+        "modifier: Modifier =",
+        "inheritLabel: String ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrProjectModelConfigUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Project-level model routing, locality enforcement ceiling, and Guardian policy configuration.",
+      "signature": [
+        "projectId: String =",
+        "projectName: String =",
+        "mainModelId: String =",
+        "defaultRunModelId: String =",
+        "allowMainModelRunOverride: Boolean =",
+        "enforcedLocality: AgentLocality =",
+        "guardianConfig: TcrGuardianConfigUiModel =",
+        "availableLlmModels: List<String> =",
+        "availableDecisionModels: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrProjectModelRoutingCard",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/GuardianAndModelConfigComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: TcrProjectModelRoutingCard Project-level control card for configuring the Main Model, Default Model for Runs, Enforced Model Running Place, and embedded Project [TcrGuardianMod",
+      "signature": [
+        "config: TcrProjectModelConfigUiModel",
+        "onMainModelChange: (String) -> Unit",
+        "onDefaultRunModelChange: (String) -> Unit",
+        "onLocalityChange: (AgentLocality) -> Unit",
+        "onGuardianPolicyChange: (TcrTaintApprovalPolicy) -> Unit",
+        "onDecisionModelChange: (String) -> Unit",
+        "onGuardianLlmChange: (String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrRunConfigBar",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/GuardianAndModelConfigComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR Component: TcrRunConfigBar Compact per-run override bar allowing operators to inherit or override the project's Guardian approval policy, enforced locality ceiling, and target run model.",
+      "signature": [
+        "config: TcrRunLaunchConfigUiModel",
+        "effectivePolicy: TcrTaintApprovalPolicy",
+        "effectiveModelId: String",
+        "effectiveLocality: AgentLocality",
+        "availableLlmModels: List<String> =",
+        "onGuardianPolicyOverride: (TcrTaintApprovalPolicy?) -> Unit",
+        "onRunModelOverride: (String) -> Unit",
+        "onLocalityOverride: (AgentLocality?) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrRunLaunchConfigUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Per-run launch overrides applied on top of [TcrProjectModelConfigUiModel].",
+      "signature": [
+        "guardianPolicyOverride: TcrTaintApprovalPolicy? =",
+        "runModelOverride: String =",
+        "localityOverride: AgentLocality? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.TcrTaintApprovalPolicy",
+      "kind": "ENUM",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Taint approval policy controlling whether tainted operations require explicit human confirmation ([MANUAL]) or automated Guardian Gate A + Gate B intent-alignment verification ([GUARDIAN]).",
+      "signature": [
+        "MANUAL",
+        "GUARDIAN"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.VirtualModelBadge",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentPlacementBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR Component: VirtualModelBadge Displays a badge indicating a virtual model dynamically resolved across trusted inference group peers (RFC-0105).",
+      "signature": [
+        "modelId: String",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.WorkerOutcomeCard",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/WorkerOutcomeCard.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR Component: WorkerOutcomeCard (RFC-0011) Visualizes treeless worker Git commit outcome summary on refs/aidos/workers/<workerSessionId>.",
+      "signature": [
+        "outcome: WorkerOutcomeUi",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.WorkerOutcomeUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Worker Git commit outcome record (refs/aidos/workers/<workerSessionId>).",
+      "signature": [
+        "workerSessionId: String",
+        "commitRef: String",
+        "outcomeSummary: String",
+        "committedAt: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.WorkerSpawnUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Worker session spawn metadata for COMPOSITE tasks (RFC-0011).",
+      "signature": [
+        "taskId: String",
+        "workerSessionId: String? =",
+        "childRunId: String? =",
+        "brief: String",
+        "budgetSplitWays: Int =",
+        "delegatedCapabilities: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.formatDuration",
+      "kind": "FUNCTION",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Human-readable execution duration formatter.",
+      "signature": [
+        "startedAt: Long?",
+        "finishedAt: Long?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.matchesSearch",
+      "kind": "FUNCTION",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Predicate checking whether an agent run matches a search query across ID, app, prompt, brief, tools, or tasks.",
+      "signature": [
+        "this: AgentRunUiModel",
+        "query: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.DiffChunkAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/DiffChunkAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "oldPath: String?",
+        "newPath: String?",
+        "lines: List<DiffLine>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.DiffChunkAtom#2",
+      "kind": "COMPOSABLE",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/DiffChunkAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "header: String",
+        "lines: List<DiffLine>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.DiffLine",
+      "kind": "DATA_CLASS",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/DiffChunkAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "kind: DiffLineKind",
+        "text: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.DiffLineKind",
+      "kind": "ENUM",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/DiffChunkAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "CONTEXT",
+        "ADDITION",
+        "DELETION"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.ScopePathChipAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/ScopePathChipAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "path: String",
+        "modifier: Modifier =",
+        "isExcluded: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.StepCounterAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/StepCounterAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "currentStep: Int",
+        "maxSteps: Int",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.code.StepCounterAtom#2",
+      "kind": "COMPOSABLE",
+      "domain": "atom.code",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/code/StepCounterAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "currentStep: Int",
+        "totalSteps: Int",
+        "modifier: Modifier =",
+        "useTotalAlias: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.core.ActionButtonAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.core",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/core/ActionButtonAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "text: String",
+        "onClick: () -> Unit",
+        "modifier: Modifier =",
+        "kind: ActionButtonKind =",
+        "enabled: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.core.ActionButtonAtom#2",
+      "kind": "COMPOSABLE",
+      "domain": "atom.core",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/core/ActionButtonAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "label: String",
+        "onClick: () -> Unit",
+        "modifier: Modifier =",
+        "enabled: Boolean =",
+        "containerColor: Color =",
+        "contentColor: Color ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.core.ActionButtonKind",
+      "kind": "ENUM",
+      "domain": "atom.core",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/core/ActionButtonAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "PRIMARY",
+        "SECONDARY",
+        "DANGER",
+        "TACTILE_MICRO"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.core.AudioWaveformAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.core",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/core/AudioWaveformAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "amplitudes: List<Float>",
+        "modifier: Modifier =",
+        "barColor: Color ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.core.MetricBadgeAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.core",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/core/MetricBadgeAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "label: String",
+        "value: String",
+        "modifier: Modifier =",
+        "accentColor: Color ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.core.TextSpanAtom",
+      "kind": "COMPOSABLE",
+      "domain": "atom.core",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/core/TextSpanAtom.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "text: String",
+        "modifier: Modifier =",
+        "color: Color =",
+        "style: TextStyle =",
+        "maxLines: Int =",
+        "overflow: TextOverflow ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.molecule.InlineCardMolecule",
+      "kind": "COMPOSABLE",
+      "domain": "atom.molecule",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/molecule/InlineCardMolecule.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "title: String",
+        "modifier: Modifier =",
+        "borderColor: Color =",
+        "content: @Composable () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.molecule.MetricClusterMolecule",
+      "kind": "COMPOSABLE",
+      "domain": "atom.molecule",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/molecule/MetricClusterMolecule.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "metrics: List<MetricItem>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.atom.molecule.MetricItem",
+      "kind": "DATA_CLASS",
+      "domain": "atom.molecule",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/atom/molecule/MetricClusterMolecule.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "label: String",
+        "value: String",
+        "accentColor: Color ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.document.DocumentChatFlow",
+      "kind": "COMPOSABLE",
+      "domain": "document",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/document/DocumentChatFlow.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism Document Component: DocumentChatFlow AUTHORITATIVE OWNERSHIP: Dictator Ecosystem & TCR (D46 / TCR Architecture) - Dictator owns all voice-first document editing interfaces, caret-anchored act",
+      "signature": [
+        "items: List<TimelineItemUiModel>",
+        "currentUserId: String",
+        "inputDraft: String",
+        "onInputDraftChanged: (String) -> Unit",
+        "onSend: () -> Unit",
+        "viewMode: ConversationViewMode",
+        "listState: LazyListState",
+        "modifier: Modifier =",
+        "onApproveDisclosure: (requestId: String) -> Unit =",
+        "onDeclineDisclosure: (requestId: String) -> Unit =",
+        "onConfirmCalendarAction: (itemId: String) -> Unit =",
+        "onToggleAudio: () -> Unit =",
+        "onToggleSttVisibility: (messageId: String) -> Unit =",
+        "onUnshieldMessageForAi: (messageId: String) -> Unit =",
+        "onOrchestratorCommand: (command: String, targetMessageId: String?) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.document.DocumentInputSection",
+      "kind": "COMPOSABLE",
+      "domain": "document",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/document/DocumentInputSection.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular Document Component: DocumentInputSection AUTHORITATIVE OWNERSHIP: Dictator Ecosystem & TCR (D46 / TCR Architecture) Dictator owns all voice-first document editing interfaces, caret-anchored ",
+      "signature": [
+        "text: String",
+        "onTextChanged: (String) -> Unit",
+        "onSend: () -> Unit",
+        "modifier: Modifier =",
+        "placeholder: String =",
+        "isVoiceActive: Boolean =",
+        "attachedTargetLabel: String? =",
+        "onDetachTarget: (() -> Unit)? =",
+        "onPillTap: () -> Unit =",
+        "onPillDoubleTapOrHold: () -> Unit =",
+        "onPillDragDelta: ((Offset) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.AppApprovalRecordUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.1",
+      "summary": "Connected app approval record presentation model.",
+      "signature": [
+        "packageName: String",
+        "displayName: String",
+        "status: AppApprovalStatus",
+        "decidedAt: String? =",
+        "firstSeenAt: String =",
+        "lastSeenAt: String =",
+        "attemptCount: Int =",
+        "requestCount: Int =",
+        "sdkVersion: String? =",
+        "apiVersion: Int? =",
+        "agentAllowed: Boolean =",
+        "localityLimit: String? =",
+        "localityRefusalCount: Int =",
+        "lastLocalityRefusalAt: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.AppApprovalStatus",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Connected app handshake approval status.",
+      "signature": [
+        "APPROVED",
+        "DENIED",
+        "PENDING"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.BackgroundPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/BackgroundPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: BackgroundPane (RFC-0115).",
+      "signature": [
+        "state: BackgroundUiState",
+        "onSetEnabled: (Boolean) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.BackgroundServiceUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/BackgroundPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "One background service as the user sees it.",
+      "signature": [
+        "name: String",
+        "registered: Boolean"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.BackgroundUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/BackgroundPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "What the \"Run in background\" pane shows (RFC-0115, D56).",
+      "signature": [
+        "supported: Boolean =",
+        "services: List<BackgroundServiceUi> =",
+        "busy: Boolean =",
+        "message: String? =",
+        "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ConnectedAppsPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ConnectedAppsPane.kt",
+      "status": "STABLE",
+      "contract": "1.1.0",
+      "summary": "Organism TCR Component: ConnectedAppsPane Connected Apps approval & authorization management pane (RFC-0103, Phase D).",
+      "signature": [
+        "approvals: List<AppApprovalRecordUi>",
+        "isEngineRunning: Boolean",
+        "onApprove: (String) -> Unit",
+        "onDeny: (String) -> Unit",
+        "onRevoke: (String) -> Unit",
+        "onUndoDeny: (String) -> Unit",
+        "modifier: Modifier =",
+        "notRunningText: String =",
+        "onSetAgentAllowed: ((packageName: String, allowed: Boolean) -> Unit)? =",
+        "onSetLocalityLimit: ((packageName: String, limit: String?) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ContextFitRow",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Row in the context fit matrix.",
+      "signature": [
+        "contextLength: Int",
+        "verdict: ModelFitVerdict",
+        "estimatedMemoryMB: Int",
+        "baselineVerdict: ModelFitVerdict? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ContextFitTable",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "rows: List<ContextFitRow>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.CookbookModel",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Model candidate in the cookbook or Hugging Face search results.",
+      "signature": [
+        "id: String",
+        "name: String",
+        "kind: String",
+        "quantization: String",
+        "sizeBytes: Long?",
+        "contextLength: Int",
+        "fitVerdict: ModelFitVerdict",
+        "isRunnable: Boolean =",
+        "tokensPerSecond: Float? =",
+        "estimatedVramMB: Int? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.CookbookModelCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "model: CookbookModel",
+        "onTap: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.DownloadProgress",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Real-time download progress for a model artifact.",
+      "signature": [
+        "modelId: String",
+        "modelName: String",
+        "progressPercent: Int",
+        "speedMBps: Float? =",
+        "etaSeconds: Int? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.DownloadProgressCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "download: DownloadProgress",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.EngineControlCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineControlCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "The Engine ON/OFF card.",
+      "signature": [
+        "isEngineRunning: Boolean",
+        "engineStateName: String",
+        "hint: String",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.EngineState",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Lifecycle state of an Engine host.",
+      "signature": [
+        "STARTING",
+        "READY",
+        "FAILED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.FitVerdictChip",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "verdict: ModelFitVerdict"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.HfTokenStatus",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Settings configuration state.",
+      "signature": [
+        "isConfigured: Boolean",
+        "lastValidatedMs: Long? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.LanDeviceUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A device that may use an Engine over the LAN.",
+      "signature": [
+        "id: String",
+        "label: String",
+        "expiresAt: String",
+        "revoked: Boolean",
+        "expired: Boolean"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.LanSharingPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/LanSharingPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: LanSharingPane (RFC-0051).",
+      "signature": [
+        "state: LanSharingUiState",
+        "onSetEnabled: (Boolean) -> Unit",
+        "onAddByCode: (label: String, lifetimeHours: Long) -> Unit",
+        "onAddManually: (label: String, lifetimeHours: Long) -> Unit",
+        "onRevoke: (String) -> Unit",
+        "onDismissPairing: () -> Unit",
+        "modifier: Modifier =",
+        "qrCode: (@Composable (String) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.LanSharingUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "enabled: Boolean =",
+        "port: Int =",
+        "fingerprintSha256: String? =",
+        "devices: List<LanDeviceUi> =",
+        "pairing: LanPairingUi? =",
+        "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.LicenseInfoCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "licenseName: String?",
+        "modelUrl: String?",
+        "onReviewTerms: (() -> Unit)? =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.MemoryBudget",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Device RAM budget in megabytes.",
+      "signature": [
+        "usedMB: Int",
+        "totalMB: Int"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.MemoryBudgetIndicator",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "budget: MemoryBudget",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelDetail",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Full detailed specification and diagnostics for an inspected model.",
+      "signature": [
+        "id: String",
+        "name: String",
+        "description: String =",
+        "providerName: String",
+        "kind: ModelKind =",
+        "licenseName: String? =",
+        "modelUrl: String? =",
+        "sizeMB: Int",
+        "contextFitTable: List<ContextFitRow> =",
+        "isRunnable: Boolean =",
+        "format: String =",
+        "deviceTotalRamMB: Int =",
+        "deviceFreeRamMB: Int =",
+        "baselineFreeRamMB: Int? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelDetailContent",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelDetailContent.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR Component: ModelDetailContent Model detail, acquire, and execution diagnostics view: - Artifact format and quantization metadata - Preferred context slider and RAM fit verdict lines - LLa",
+      "signature": [
+        "state: ModelDetailState",
+        "loadingState: ModelLoadingState",
+        "engineState: EngineState",
+        "preferredContext: Int",
+        "actions: ModelDetailActions",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelDetailState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Complete UI state for the Model Detail view.",
+      "signature": [
+        "model: ModelDetail? =",
+        "isInstalled: Boolean =",
+        "installedPath: String? =",
+        "installedSizeBytes: Long? =",
+        "installedDigest: String? =",
+        "isDownloading: Boolean =",
+        "downloadProgress: Int =",
+        "downloadError: String? =",
+        "embeddingInput: String =",
+        "embeddingVector: List<Float> =",
+        "isEmbeddingTesting: Boolean =",
+        "embeddingError: String? =",
+        "selfTestText: String =",
+        "selfTestFile: String =",
+        "isSelfTesting: Boolean =",
+        "selfTestOutcome: SelfTestOutcome? =",
+        "runSettings: RunSettingsUi =",
+        "loadedRunSettings: RunSettingsUi? =",
+        "isLoading: Boolean =",
+        "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelFitVerdict",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Fit verdict indicating whether a model fits in device RAM / context window.",
+      "signature": [
+        "RUNS_WELL",
+        "RUNS_TIGHT",
+        "EXCEEDS_CONTEXT",
+        "WILL_NOT_FIT"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelKind",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Model kind representation for local and cloud inference.",
+      "signature": [
+        "LLM",
+        "EMBEDDING",
+        "STT",
+        "TTS",
+        "VISION",
+        "OCR",
+        "RERANKER",
+        "TRANSLATION",
+        "DECISION"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelLoadingProgressCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "loadingState: ModelLoadingState",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelLoadingState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "modelId: String =",
+        "status: ModelLoadingStatus =",
+        "loadProgress: Int =",
+        "estimatedMemoryMB: Int =",
+        "error: String? =",
+        "loadTimeMs: Long? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelLoadingStatus",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Active model loading progress status.",
+      "signature": [
+        "NOT_LOADED",
+        "LOADING",
+        "LOADED",
+        "ERROR",
+        "UNLOADING"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelSearchBar",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "query: String",
+        "onQueryChange: (String) -> Unit",
+        "placeholder: String =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelSearchFilters",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Client-side filters for model searching.",
+      "signature": [
+        "minSizeMb: Int? =",
+        "maxSizeMb: Int? =",
+        "fitsDeviceOnly: Boolean =",
+        "runnableOnly: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelTestKind",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "The test a model card offers, chosen by what the model is (RFC-0103, RFC-0022).",
+      "signature": [
+        "CHAT",
+        "DECISION",
+        "TRANSCRIPTION",
+        "VISION"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelsPaneState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "State for the Models screen tabs.",
+      "signature": [
+        "engineState: EngineState =",
+        "localModels: List<CookbookModel> =",
+        "isLoading: Boolean =",
+        "cookbookModels: List<CookbookModel> =",
+        "isSearching: Boolean =",
+        "suggestions: List<SuggestionUi> =",
+        "providers: List<ProviderSummary> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ModelsTabs",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelsPanes.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR Component: ModelsTabs Full-featured Model Management screen tabs: 1.",
+      "signature": [
+        "state: ModelsPaneState",
+        "actions: ModelsPaneActions",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.PeerRouteUi",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "How a peer link arrived (RFC-0108).",
+      "signature": [
+        "LAN",
+        "DIRECT",
+        "SSH_TUNNEL"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ProviderSummary",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Provider summary card representation.",
+      "signature": [
+        "id: String",
+        "name: String",
+        "statusText: String",
+        "isEnabled: Boolean",
+        "isConfigured: Boolean",
+        "modelCount: Int"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.RamBaselineState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "baselineUsedMB: Int? =",
+        "currentUsedMB: Int =",
+        "totalMB: Int ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.RemotePeerUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A paired AIDIN peer, with everything the user can switch about it (RFC-0107, RFC-0108).",
+      "signature": [
+        "id: String",
+        "label: String",
+        "connected: Boolean",
+        "route: PeerRouteUi?",
+        "hostsAgentLoops: Boolean",
+        "preferredRank: Int?",
+        "remoteAccessAllowed: Boolean",
+        "hints: List<String>",
+        "toolAllowlists: List<ToolAllowlistUi>"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.RemotePeersActions",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/RemotePeersPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "What the user can do to a peer on this pane (RFC-0107, RFC-0108).",
+      "signature": [
+        "onSetHostsAgentLoops: (peerId: String, enabled: Boolean) -> Unit",
+        "onSetPreferred: (peerId: String, preferred: Boolean) -> Unit",
+        "onSetRemoteAccess: (peerId: String, allowed: Boolean) -> Unit",
+        "onAddHint: (peerId: String, host: String, port: Int) -> Unit",
+        "onRemoveHint: (peerId: String, hint: String) -> Unit",
+        "onSetToolAllowlist: (peerId: String, app: String, tools: List<String>) -> Unit",
+        "onDecideToolApproval: (approvalId: String, allow: Boolean) -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.RemotePeersPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/RemotePeersPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: RemotePeersPane (RFC-0107 remote agent hosting, RFC-0108 remote routes).",
+      "signature": [
+        "state: RemoteSharingUiState",
+        "actions: RemotePeersActions",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.RemoteSharingUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "aidinRunning: Boolean =",
+        "peers: List<RemotePeerUi> =",
+        "pendingApprovals: List<ToolApprovalUi> =",
+        "auditLines: List<String> =",
+        "knownApps: List<String> =",
+        "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ResidentModel",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Model resident in memory.",
+      "signature": [
+        "id: String",
+        "displayName: String",
+        "quantization: String",
+        "loadedAgoMs: Long"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ResidentModelCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelComponents.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "model: ResidentModel",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.RunSettingsUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Runtime execution settings for a loaded model.",
+      "signature": [
+        "contextLength: Int? =",
+        "threads: Int? =",
+        "batchSize: Int? =",
+        "gpuLayers: Int? =",
+        "temperature: Float? =",
+        "topP: Float? =",
+        "topK: Int? =",
+        "useMmap: Boolean? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SelfTestOutcome",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Self-test diagnostic outcome for a loaded model.",
+      "signature": [
+        "passed: Boolean",
+        "summary: String",
+        "lines: List<String> =",
+        "durationMs: Long? =",
+        "generatedTokens: Int? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SettingsContent",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SettingsContent.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR Component: SettingsContent Engine Settings content (RFC-0103, Phase D): - Hugging Face API token management (input, validate, clear, encrypted storage disclaimer) - RAM baseline configura",
+      "signature": [
+        "state: SettingsState",
+        "dismissedSuggestionCount: Int",
+        "onStateChange: (SettingsState) -> Unit",
+        "onSaveToken: (String) -> Unit",
+        "onClearToken: () -> Unit",
+        "onRestoreSuggestions: () -> Unit",
+        "tokenStorageNote: String",
+        "modifier: Modifier =",
+        "ramBaseline: RamBaselineState? =",
+        "onSetRamBaselineNow: (() -> Unit)? =",
+        "onClearRamBaseline: (() -> Unit)? =",
+        "engineCacheDir: String? =",
+        "globalMainModelId: String =",
+        "globalDefaultRunModelId: String =",
+        "globalLocality: AgentLocality =",
+        "guardianConfig: TcrGuardianConfigUiModel? =",
+        "availableLlmModels: List<String> =",
+        "onGlobalMainModelChange: (String) -> Unit =",
+        "onGlobalDefaultRunModelChange: (String) -> Unit =",
+        "onGlobalLocalityChange: (AgentLocality) -> Unit =",
+        "onGlobalGuardianPolicyChange: (TcrTaintApprovalPolicy) -> Unit =",
+        "onGlobalDecisionModelChange: (String) -> Unit =",
+        "onGlobalGuardianLlmChange: (String) -> Unit =",
+        "showModelRoutingSettings: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SettingsState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "hfTokenStatus: HfTokenStatus =",
+        "showTokenInput: Boolean =",
+        "tokenInput: String =",
+        "isLoading: Boolean =",
+        "successMessage: String? =",
+        "errorMessage: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ShellGrantUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "One active `shell:exec` grant.",
+      "signature": [
+        "id: String",
+        "workingDirectory: String",
+        "commands: List<String>?",
+        "expiresAt: String?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ShellGrantsPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: ShellGrantsPane (RFC-0033).",
+      "signature": [
+        "state: ShellGrantsUiState",
+        "onSelectProject: (String) -> Unit",
+        "onSelectSession: (String) -> Unit",
+        "onGrant: (workingDirectory: String, commands: List<String>?, lifetimeHours: Long?) -> Unit",
+        "onRevoke: (String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ShellGrantsUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "projects: List<ShellProjectUi> =",
+        "selectedProjectId: String? =",
+        "sessions: List<ShellSessionUi> =",
+        "selectedSessionId: String? =",
+        "grants: List<ShellGrantUi> =",
+        "runtimeNote: String? =",
+        "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ShellProjectUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A project a shell grant can be made in.",
+      "signature": [
+        "id: String",
+        "name: String",
+        "path: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ShellSessionUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A session that holds (or could hold) shell grants.",
+      "signature": [
+        "id: String",
+        "name: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SshTunnelUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SshTunnelsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "name: String",
+        "server: String",
+        "user: String",
+        "publishedPort: Int",
+        "status: TunnelStatusUi",
+        "detail: String?",
+        "authorizedKeysLine: String?",
+        "pinnedHostKey: String?",
+        "pendingHostKey: String?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SshTunnelsActions",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SshTunnelsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "onCreate: (name: String, host: String, port: Int, user: String, publishedPort: Int) -> Unit",
+        "onProbeHostKey: (id: String) -> Unit",
+        "onConfirmHostKey: (id: String) -> Unit",
+        "onStart: (id: String) -> Unit",
+        "onStop: (id: String) -> Unit",
+        "onRotateKey: (id: String) -> Unit",
+        "onDelete: (id: String) -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SshTunnelsPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SshTunnelsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: SshTunnelsPane (RFC-0108 phase 3).",
+      "signature": [
+        "state: SshTunnelsUiState",
+        "actions: SshTunnelsActions",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SshTunnelsUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SshTunnelsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "tunnels: List<SshTunnelUi> =",
+        "canPublish: Boolean =",
+        "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.StatusPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/StatusPane.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR Component: StatusPane Engine status, resident models, and memory budget dashboard: - Engine running/stopped state banner with host-specific control toggle - Resident memory models list - ",
+      "signature": [
+        "state: StatusUiState",
+        "engineControl: @Composable () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.StatusUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Status pane summary telemetry.",
+      "signature": [
+        "isEngineRunning: Boolean =",
+        "engineStateName: String =",
+        "residentModels: List<ResidentModel> =",
+        "memory: MemoryBudget =",
+        "freeStorageGb: Int? =",
+        "approvedApps: List<String> =",
+        "pendingAppCount: Int =",
+        "linkedPeerCount: Int ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SuggestedModel",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Suggested curated model.",
+      "signature": [
+        "id: String",
+        "name: String",
+        "description: String",
+        "repoId: String",
+        "filename: String",
+        "format: String",
+        "backend: String",
+        "approxSizeBytes: Long",
+        "runnable: Boolean"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.SuggestionUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Suggested model with its live installation state.",
+      "signature": [
+        "model: SuggestedModel",
+        "isInstalled: Boolean",
+        "isInstalling: Boolean",
+        "progressPercent: Int",
+        "error: String?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.TestChatState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "modelId: String =",
+        "modelName: String =",
+        "messages: List<UiChatMessage> =",
+        "inputText: String =",
+        "isLoading: Boolean =",
+        "error: String? =",
+        "totalTokensUsed: Int =",
+        "averageTokensPerSecond: Float ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ToolAllowlistUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "The tools one app on this Engine lets one peer's agent loop use.",
+      "signature": [
+        "app: String",
+        "tools: List<String>"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.ToolApprovalUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "An effectful tool call on a tainted remote run, waiting for the user.",
+      "signature": [
+        "id: String",
+        "peerLabel: String",
+        "app: String",
+        "tool: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.TunnelStatusUi",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SshTunnelsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Where an SSH reverse tunnel is in its life (RFC-0108).",
+      "signature": [
+        "NEEDS_HOST_KEY",
+        "STOPPED",
+        "CONNECTING",
+        "UP",
+        "RECONNECTING",
+        "HOST_KEY_CHANGED",
+        "AUTH_REFUSED",
+        "FORWARD_REFUSED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.UiChatMessage",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Test chat message and state.",
+      "signature": [
+        "id: String =",
+        "role: String",
+        "content: String",
+        "tokensUsed: Int? =",
+        "generationTimeMs: Long? =",
+        "stopReason: String? =",
+        "route: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.defaultTextFor",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "this: ModelTestKind",
+        "modelId: String?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.formatActionableErrorMessage",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Actionable error message translator.",
+      "signature": [
+        "error: String?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.formatElapsed",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Elapsed duration formatter.",
+      "signature": [
+        "elapsedMs: Long"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.formatMb",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelDetailContent.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "mb: Int"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.formatSize",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Human-readable artifact size formatter.",
+      "signature": [
+        "bytes: Long?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.parseHostPort",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "`host:port` as typed, or null when it is not a valid address.",
+      "signature": [
+        "text: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.parseShellScope",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Parses [shellScopeString]; null when [scope] is not a shell scope.",
+      "signature": [
+        "scope: String?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.parseToolNames",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/SharingModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Tool names from comma, space or newline separated text; blanks dropped, order kept, duplicates removed.",
+      "signature": [
+        "text: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.selfTestKind",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "this: ModelKind"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.shellScopeString",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ShellGrantsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "`shell:<dir>` or `shell:<dir>|cmd1,cmd2`: the scope string the runtime API takes for a shell grant (RFC-0033).",
+      "signature": [
+        "workingDirectory: String",
+        "commands: List<String>?"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.statusColorForVerdict",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Returns the theme status color for a given model fit verdict.",
+      "signature": [
+        "verdict: ModelFitVerdict"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.testTimingLine",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelDetailContent.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "outcome: SelfTestOutcome"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.gates.DiffInspectionSheet",
+      "kind": "COMPOSABLE",
+      "domain": "frontdoors.gates",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/gates/DiffInspectionSheet.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "fileDiffs: List<FileDiffPreview>",
+        "onClose: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.gates.FileDiffPreview",
+      "kind": "DATA_CLASS",
+      "domain": "frontdoors.gates",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/gates/DiffInspectionSheet.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "filePath: String",
+        "lines: List<DiffLine>"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.inbox.ActionItemCard",
+      "kind": "COMPOSABLE",
+      "domain": "frontdoors.inbox",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/inbox/ActionItemCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "item: TcrActionItemUiModel",
+        "onComplete: (String) -> Unit",
+        "onClick: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.inbox.BatonHandoffBadge",
+      "kind": "COMPOSABLE",
+      "domain": "frontdoors.inbox",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/inbox/BatonHandoffBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "direction: BatonTransferDirection",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.inbox.BatonTransferDirection",
+      "kind": "ENUM",
+      "domain": "frontdoors.inbox",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/inbox/BatonHandoffBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "AGENT_TO_HUMAN",
+        "HUMAN_TO_AGENT",
+        "PEER_COLLABORATION"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.inbox.TcrActionItemUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "frontdoors.inbox",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/inbox/ActionItemCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "title: String",
+        "description: String? =",
+        "status: TcrDerivedStatus =",
+        "projectName: String",
+        "isLifeProject: Boolean =",
+        "batonDirection: BatonTransferDirection =",
+        "scopePaths: List<String> =",
+        "estimatedSteps: Int? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.projects.ProjectTypeBadge",
+      "kind": "COMPOSABLE",
+      "domain": "frontdoors.projects",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/projects/ProjectTypeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "domain: WorkspaceDomain",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.frontdoors.projects.WorkspaceDomain",
+      "kind": "ENUM",
+      "domain": "frontdoors.projects",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/frontdoors/projects/ProjectTypeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "LIFE_AIR_GAPPED",
+        "CODE_GIT_BACKED",
+        "WORK_ENTERPRISE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.generative.GenerativeUiRegistry.RenderItem",
+      "kind": "COMPOSABLE",
+      "domain": "generative",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/generative/GenerativeUiRegistry.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Composable dispatcher rendering any TimelineItemUiModel as an atomic/molecular UI block.",
+      "signature": [
+        "item: TimelineItemUiModel",
+        "currentUserId: String",
+        "modifier: Modifier =",
+        "onApproveDisclosure: (requestId: String) -> Unit =",
+        "onDeclineDisclosure: (requestId: String) -> Unit =",
+        "onConfirmCalendar: () -> Unit =",
+        "onToggleAudio: () -> Unit =",
+        "onToggleStt: (messageId: String) -> Unit =",
+        "onUnshieldForAi: (messageId: String) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.generative.GenerativeUiRegistry.mapEnvelopeToTimelineItem",
+      "kind": "FUNCTION",
+      "domain": "generative",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/generative/GenerativeUiRegistry.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Map a UniversalEnvelope into its corresponding TimelineItemUiModel.",
+      "signature": [
+        "envelope: UniversalEnvelope"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.DispatchPolicyBadge",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentNodeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Chip indicating effective dispatch policy: AUTO_WHEN_READY vs MANUAL_START.",
+      "signature": [
+        "policy: TcrEffectiveDispatchPolicy",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.EgressGateCard",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/EgressGateCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: EgressGateCard Explicit cryptographic declassification gate card for zero-egress Life message delivery.",
+      "signature": [
+        "parkedMessage: TcrParkedOutboundMessage",
+        "modifier: Modifier =",
+        "isLoading: Boolean =",
+        "onApprove: (messageId: String) -> Unit =",
+        "onReject: (messageId: String, reason: String?) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.GranularityBadge",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentNodeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Chip indicating decomposition granularity (GROUP, GOAL, SUB_GOAL, ATOMIC).",
+      "signature": [
+        "granularity: TcrIntentGranularity",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.IntentActorBadge",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentNodeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Badge indicating actor ownership: HUMAN, AGENT, or HYBRID (RFC-0110).",
+      "signature": [
+        "actorKind: TcrIntentActorKind",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.IntentStatusBadge",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentNodeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Pill badge displaying the derived execution status of an Intent node.",
+      "signature": [
+        "status: TcrDerivedStatus",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.IntentTaskCard",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentTaskCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR Component: IntentTaskCard Rich card representing an Intent Graph node across Outliner, Kanban, and Pipeline views.",
+      "signature": [
+        "node: TcrIntentNodeUiModel",
+        "modifier: Modifier =",
+        "isCompact: Boolean =",
+        "isSelected: Boolean =",
+        "onClick: ((String) -> Unit)? =",
+        "onComplete: ((String) -> Unit)? =",
+        "onDispatch: ((String) -> Unit)? =",
+        "onReview: ((String) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.MinLocalityBadge",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentNodeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Chip indicating network locality requirement (LOCAL_ONLY, TRUSTED_CLUSTER, ANY).",
+      "signature": [
+        "locality: TcrIntentMinLocality",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.SplitVerificationCard",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/SplitVerificationCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: SplitVerificationCard Desktop shell test trigger and verification review card.",
+      "signature": [
+        "verification: TcrSplitVerificationUiModel",
+        "modifier: Modifier =",
+        "onRunVerification: (nodeId: String, checkSpec: String) -> Unit =",
+        "onConfirm: (nodeId: String) -> Unit =",
+        "onReject: (nodeId: String, reason: String?) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TargetProfileBadge",
+      "kind": "COMPOSABLE",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentNodeBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Chip indicating target platform profile: MOBILE, DESKTOP, HEADLESS_SERVER, ANY.",
+      "signature": [
+        "profile: TcrIntentTargetProfile",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrDerivedStatus",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Derived execution status of an Intent node.",
+      "signature": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "BLOCKED",
+        "NEEDS_REVIEW",
+        "DONE",
+        "STALE",
+        "CONFLICTED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrEffectiveDispatchPolicy",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Effective scheduling policy for an Intent node.",
+      "signature": [
+        "MANUAL_START",
+        "AUTO_WHEN_READY"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentActorKind",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Actor ownership kind for an Intent node (RFC-0110).",
+      "signature": [
+        "HUMAN",
+        "AGENT",
+        "HYBRID"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentCheckKind",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Kind of verification check required for task acceptance.",
+      "signature": [
+        "NONE",
+        "FILE_EXISTS",
+        "CONTAINS_PATTERN",
+        "DIFF_NON_EMPTY",
+        "SHELL_COMMAND"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentGranularity",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Sizing granularity of an Intent node for planner decomposition.",
+      "signature": [
+        "GROUP",
+        "GOAL",
+        "SUB_GOAL",
+        "ATOMIC"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentMinLocality",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Minimum network/compute locality constraint for task execution (RFC-0042).",
+      "signature": [
+        "LOCAL_ONLY",
+        "TRUSTED_CLUSTER",
+        "ANY"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentNodeType",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Structural type of an Intent node within the Intent Graph hierarchy.",
+      "signature": [
+        "GROUP",
+        "GOAL",
+        "SUB_GOAL",
+        "ATOMIC_TASK",
+        "CONSTRAINT",
+        "ACCEPTANCE_CRITERION"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentNodeUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Presentation model for an Intent node across Outliner, Kanban, and Pipeline views.",
+      "signature": [
+        "id: String",
+        "projectId: String",
+        "title: String",
+        "description: String? =",
+        "type: TcrIntentNodeType =",
+        "actorKind: TcrIntentActorKind =",
+        "status: TcrDerivedStatus =",
+        "dispatchPolicy: TcrEffectiveDispatchPolicy =",
+        "granularity: TcrIntentGranularity =",
+        "targetProfile: TcrIntentTargetProfile? =",
+        "minLocality: TcrIntentMinLocality? =",
+        "estimatedSteps: Int? =",
+        "scopePaths: List<String> =",
+        "tags: List<String> =",
+        "unmetDependencyIds: List<String> =",
+        "activeRunIds: List<String> =",
+        "pendingPlatformChecks: Boolean =",
+        "checkKind: TcrIntentCheckKind? =",
+        "checkSpec: String? =",
+        "dueAt: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrIntentTargetProfile",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Target device/host platform profile for dispatch (RFC-0110).",
+      "signature": [
+        "MOBILE",
+        "DESKTOP",
+        "HEADLESS_SERVER",
+        "ANY"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrOutboundMessageRequest",
+      "kind": "DATA_CLASS",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Proposed outbound network message originating from an agent session (RFC-0113).",
+      "signature": [
+        "id: String",
+        "projectId: String",
+        "projectType: String =",
+        "channel: String",
+        "recipient: String",
+        "payload: String",
+        "reason: String? =",
+        "taintLevel: String =",
+        "runId: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrParkedMessageStatus",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Status of a parked outbound message in the Egress Gate queue (RFC-0113 §4.3).",
+      "signature": [
+        "PARKED",
+        "APPROVED",
+        "REJECTED",
+        "TRANSMITTED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrParkedOutboundMessage",
+      "kind": "DATA_CLASS",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "An outbound message parked for explicit human cryptographic declassification approval (RFC-0113 §4.3).",
+      "signature": [
+        "id: String",
+        "request: TcrOutboundMessageRequest",
+        "status: TcrParkedMessageStatus =",
+        "createdAt: String",
+        "approvalDecisionAt: String? =",
+        "approverUserId: String? =",
+        "rejectionReason: String? =",
+        "hmacTokenId: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrSplitVerificationUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "UI model for a Split Verification gate review card (RFC-0110 §Coding Management).",
+      "signature": [
+        "nodeId: String",
+        "projectId: String",
+        "title: String",
+        "runId: String? =",
+        "originatingProfile: TcrIntentTargetProfile =",
+        "targetProfile: TcrIntentTargetProfile =",
+        "checkKind: TcrIntentCheckKind =",
+        "checkSpec: String =",
+        "scopePaths: List<String> =",
+        "status: TcrDerivedStatus =",
+        "outcome: TcrVerificationOutcome =",
+        "outputLog: String? =",
+        "isVerifying: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.intent.TcrVerificationOutcome",
+      "kind": "ENUM",
+      "domain": "intent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/intent/IntentUiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Execution outcome of a verification test check.",
+      "signature": [
+        "PENDING",
+        "RUNNING",
+        "PASSED",
+        "FAILED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.layout.FormFactor",
+      "kind": "ENUM",
+      "domain": "layout",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/layout/WindowSizeClass.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Universal adaptive layout form factors (RFC-0111, RFC-0112).",
+      "signature": [
+        "HANDHELD_COMPACT",
+        "HANDHELD_EXPANDED",
+        "DESKTOP_DOCKED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.layout.NavigationDestination",
+      "kind": "DATA_CLASS",
+      "domain": "layout",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/layout/ResponsiveScaffold.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "label: String",
+        "icon: @Composable () -> Unit",
+        "badge: (@Composable () -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.layout.ResponsiveScaffold",
+      "kind": "COMPOSABLE",
+      "domain": "layout",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/layout/ResponsiveScaffold.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "destinations: List<NavigationDestination>",
+        "selectedDestinationId: String",
+        "onDestinationSelected: (String) -> Unit",
+        "modifier: Modifier =",
+        "topBar: (@Composable () -> Unit)? =",
+        "overlayContent: (@Composable () -> Unit)? =",
+        "content: @Composable (FormFactor) -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.layout.ScaffoldNavigationType",
+      "kind": "ENUM",
+      "domain": "layout",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/layout/ResponsiveScaffold.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "BOTTOM_NAVIGATION",
+        "NAVIGATION_RAIL",
+        "PERMANENT_DRAWER"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.layout.computeFormFactor",
+      "kind": "FUNCTION",
+      "domain": "layout",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/layout/WindowSizeClass.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "widthDp: Float"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.layout.navigationTypeForFormFactor",
+      "kind": "FUNCTION",
+      "domain": "layout",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/layout/ResponsiveScaffold.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "formFactor: FormFactor"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpAdoptionFilter",
+      "kind": "ENUM",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "ALL",
+        "ADOPTED",
+        "AVAILABLE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpConfigJsonParser.parse",
+      "kind": "FUNCTION",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "rawInput: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpServerUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Representation of an MCP server registration for Compose UI (RFC-0031, RFC-0054).",
+      "signature": [
+        "id: String",
+        "name: String",
+        "transport: String",
+        "command: String? =",
+        "args: List<String> =",
+        "endpointUrl: String? =",
+        "packageName: String? =",
+        "serviceClass: String? =",
+        "signingCertSha256: Set<String> =",
+        "profiles: Set<String> =",
+        "secretRefs: Map<String, String> =",
+        "status: String =",
+        "autoRestart: Boolean =",
+        "toolCount: Int =",
+        "adoptedCount: Int ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpServersPane",
+      "kind": "COMPOSABLE",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpServersPane.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR Component: McpServersPane MCP Server & Tool Adoption Management Dashboard (RFC-0031, RFC-0054).",
+      "signature": [
+        "state: McpUiState",
+        "onAddServer: (ParsedMcpServerConfig) -> Unit",
+        "onDeleteServer: (serverId: String) -> Unit",
+        "onSelectServer: (serverId: String?) -> Unit",
+        "onToggleAdoption: (serverId: String, toolName: String, shouldAdopt: Boolean) -> Unit",
+        "onAdoptAll: (serverId: String) -> Unit",
+        "onUnadoptAll: (serverId: String) -> Unit",
+        "onRefreshCatalog: (serverId: String) -> Unit",
+        "onSearchQueryChange: (String) -> Unit",
+        "onTransportFilterChange: (McpTransportFilter) -> Unit",
+        "onAdoptionFilterChange: (McpAdoptionFilter) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpToolUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Representation of an MCP tool operation for catalog inspection & adoption.",
+      "signature": [
+        "name: String",
+        "serverId: String",
+        "description: String? =",
+        "inputSchemaJson: String? =",
+        "isAdopted: Boolean =",
+        "descriptorHash: String? =",
+        "adoptedAt: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpTransportFilter",
+      "kind": "ENUM",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "ALL",
+        "STDIO",
+        "HTTP",
+        "BINDER"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.McpUiState",
+      "kind": "DATA_CLASS",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "UI State for the MCP management screen.",
+      "signature": [
+        "servers: List<McpServerUiModel> =",
+        "selectedServerId: String? =",
+        "selectedCatalog: List<McpToolUiModel> =",
+        "isLoadingCatalog: Boolean =",
+        "searchQuery: String =",
+        "transportFilter: McpTransportFilter =",
+        "adoptionFilter: McpAdoptionFilter =",
+        "message: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mcp.ParsedMcpServerConfig",
+      "kind": "DATA_CLASS",
+      "domain": "mcp",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mcp/McpModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Parsed MCP server configuration extracted from user input or pasted JSON.",
+      "signature": [
+        "name: String",
+        "transport: String",
+        "command: String? =",
+        "args: List<String> =",
+        "endpointUrl: String? =",
+        "envOrHeaders: Map<String, String> =",
+        "profiles: Set<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.ApprovalCard",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/ApprovalCard.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR component: ApprovalCard 1-Tap Progressive Disclosure Authorization Card.",
+      "signature": [
+        "requestId: String",
+        "topicKey: String",
+        "promptText: String",
+        "proposedValue: String? =",
+        "status: DisclosureStatus =",
+        "isLoading: Boolean =",
+        "modifier: Modifier =",
+        "onApprove: (requestId: String) -> Unit =",
+        "onDecline: (requestId: String) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.CalendarCopilotCard",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/CalendarCopilotCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR component: CalendarCopilotCard Implements Scenario 3: Inline Calendar Co-Pilot.",
+      "signature": [
+        "eventTitle: String",
+        "proposedTime: String",
+        "conflictSummary: String? =",
+        "isActionTaken: Boolean =",
+        "modifier: Modifier =",
+        "onConfirmAction: () -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.ContactRow",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/ContactRow.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR component: ContactRow Contact list item in the contacts directory or spatial canvas node preview.",
+      "signature": [
+        "contact: ContactUiModel",
+        "modifier: Modifier =",
+        "isSelected: Boolean =",
+        "onClick: () -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.ConversationInputBar",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/ConversationInputBar.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR component: ConversationInputBar Input composer for the messenger.",
+      "signature": [
+        "text: String",
+        "onTextChanged: (String) -> Unit",
+        "isHumanOnly: Boolean",
+        "onToggleHumanOnly: () -> Unit",
+        "modifier: Modifier =",
+        "onVoiceDictationTrigger: () -> Unit =",
+        "onAskAiTrigger: (() -> Unit)? =",
+        "onSend: () -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.CueChip",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/CueChip.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR component: CueChip Ultra-condensed badge chip for displaying semantic keywords extracted by local agent inferences (e.g.",
+      "signature": [
+        "text: String",
+        "modifier: Modifier =",
+        "isHighlighted: Boolean =",
+        "onClick: (() -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.CueTickerRow",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/CueTickerRow.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR component: CueTickerRow Renders an ultra-condensed semantic cue row for executive/glance mode.",
+      "signature": [
+        "timestamp: Long",
+        "senderName: String",
+        "provenanceType: MeshProvenanceType",
+        "cueWords: List<String>",
+        "modifier: Modifier =",
+        "onClick: (() -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.DualViewToggle",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/DualViewToggle.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR component: DualViewToggle Provides instant switching between: - Natural Language Stream (standard rich conversation timeline) - Cue-Words Ticker (ultra-dense semantic keyword stream)",
+      "signature": [
+        "currentMode: ConversationViewMode",
+        "modifier: Modifier =",
+        "onModeChanged: (ConversationViewMode) -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.IdentityCard",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/IdentityCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Molecular TCR component: IdentityCard Displays cryptographic identity information: - Principal DID - Device Key ID - Blinded Mailbox Token (`HMAC(epoch, device_id)`) - Relay connection status - Hardwa",
+      "signature": [
+        "principalId: String",
+        "deviceKeyId: String",
+        "mailboxId: String",
+        "isConnected: Boolean",
+        "isHardwareEnclave: Boolean",
+        "modifier: Modifier =",
+        "onCopyMailbox: () -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.MessageBubble",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/MessageBubble.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular component: MessageBubble Primary conversational turn component.",
+      "signature": [
+        "message: TimelineItemUiModel.Message",
+        "isSelf: Boolean =",
+        "modifier: Modifier =",
+        "onToggleAudio: () -> Unit =",
+        "onToggleStt: (messageId: String) -> Unit =",
+        "onUnshieldForAi: (messageId: String) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.PresenceIndicator",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/PresenceIndicator.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR component: PresenceIndicator Renders contact presence with optional pulse wave animation.",
+      "signature": [
+        "presence: PresenceState",
+        "modifier: Modifier =",
+        "isAidosActive: Boolean =",
+        "showLabel: Boolean =",
+        "pulseAnimation: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.PrivacySealBadge",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/PrivacySealBadge.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR component: PrivacySealBadge Indicator rendered when a conversation turn or card is sealed with hardware-enclave human-only keys (RFC 9420 / StrongBox), indicating that neither party's AI as",
+      "signature": [
+        "modifier: Modifier =",
+        "detailedText: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.ProvenanceBadge",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/ProvenanceBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR component: ProvenanceBadge Distinct visual provenance badges for the 4-party conversation mesh: - 👤 Human Direct - 🤖 Delegated Runner / Aidos Assistant - 🔒 Human-Only E2EE - ⚙️ System Se",
+      "signature": [
+        "provenanceType: MeshProvenanceType",
+        "modifier: Modifier =",
+        "label: String? =",
+        "signerKeySnippet: String? =",
+        "onClick: (() -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.mesh.WaveformVisualizer",
+      "kind": "COMPOSABLE",
+      "domain": "mesh",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/mesh/WaveformVisualizer.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR component: WaveformVisualizer Renders audio dictation playback with normalized amplitude waveform bars and play/pause controls.",
+      "signature": [
+        "playbackState: AudioPlaybackUiState",
+        "modifier: Modifier =",
+        "onTogglePlay: () -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.AssertionLevel",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "ORIGINAL_HUMAN",
+        "AGENT_SYNTHESIZED",
+        "SYSTEM_VERIFIED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.AttachmentPayload",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "fileName: String",
+        "mimeType: String",
+        "sizeBytes: Long",
+        "sha256Hex: String",
+        "type: AttachmentType =",
+        "durationMs: Long? =",
+        "inlineBase64: String? =",
+        "blobUri: String? =",
+        "blobDecryptionKeyHex: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.AttachmentType",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "VOICE_NOTE",
+        "DOCUMENT",
+        "IMAGE",
+        "GENERIC_FILE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.AudioPlaybackUiState",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Audio waveform playback state for voice messages.",
+      "signature": [
+        "audioUrl: String? =",
+        "durationMs: Long =",
+        "currentPositionMs: Long =",
+        "isPlaying: Boolean =",
+        "amplitudes: List<Float> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ContactFilter",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Filter for Contacts Directory.",
+      "signature": [
+        "ALL",
+        "AIDOS_ACTIVE",
+        "ACTION_REQUIRED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ContactUiModel",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "UI representation of a contact in the mesh directory.",
+      "signature": [
+        "contactId: String",
+        "displayName: String",
+        "handle: String",
+        "mailboxId: String",
+        "presence: PresenceState =",
+        "isAidosActive: Boolean =",
+        "lastSeenTimestamp: Long =",
+        "unreadCount: Int =",
+        "pendingDisclosureCount: Int =",
+        "latestCueBadge: String? =",
+        "latestSnippet: String? =",
+        "principalId: String =",
+        "x25519PublicKeyHex: String ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ContactsUiState",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "State for Contacts Directory Screen.",
+      "signature": [
+        "currentUserMailboxId: String =",
+        "contacts: List<ContactUiModel> =",
+        "searchQuery: String =",
+        "activeFilter: ContactFilter =",
+        "isLoading: Boolean =",
+        "selectedContactId: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ConversationUiState",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "State for Conversation Screen.",
+      "signature": [
+        "conversationId: String =",
+        "contact: ContactUiModel? =",
+        "viewMode: ConversationViewMode =",
+        "items: List<TimelineItemUiModel> =",
+        "inputDraft: String =",
+        "isHumanOnlyE2EEMode: Boolean =",
+        "isAidosCoPilotTyping: Boolean =",
+        "isSending: Boolean =",
+        "isShieldedSttOptOutGlobal: Boolean =",
+        "sendViewedReceipts: Boolean =",
+        "errorMessage: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ConversationViewMode",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Dual-view toggle state for conversation timeline.",
+      "signature": [
+        "NATURAL_STREAM",
+        "CUE_WORDS_TICKER"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.DisclosureReceiptRecord",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "messageId: String",
+        "discloserPrincipalId: String",
+        "timestamp: Long =",
+        "notice: String ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.DisclosureStatus",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Status of progressive disclosure request.",
+      "signature": [
+        "PENDING",
+        "APPROVED",
+        "DECLINED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.EndpointIdentifier",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "principalId: String",
+        "endpointType: EndpointType",
+        "deviceKeyId: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.EndpointType",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "HUMAN_DIRECT",
+        "AGENT_DELEGATE",
+        "SYSTEM_SERVICE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.EnvelopePayload",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "naturalLanguage: String",
+        "structuredAnnotations: List<TypedAnnotation> =",
+        "attachments: List<AttachmentPayload> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.InformationBoundaryPolicy",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "privacyLevel: PrivacyLevel",
+        "progressiveDisclosure: ProgressiveDisclosureRules? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.LoginUiState",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "State for Login & Identity Screen.",
+      "signature": [
+        "principalId: String =",
+        "deviceKeyId: String =",
+        "epochKeyHex: String =",
+        "calculatedMailboxId: String =",
+        "relayEndpoint: String =",
+        "isConnecting: Boolean =",
+        "isConnected: Boolean =",
+        "isHardwareEnclaveAvailable: Boolean =",
+        "errorMessage: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.MeshProvenanceType",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Visual styling and role classification for 4-party mesh provenance.",
+      "signature": [
+        "HUMAN_DIRECT",
+        "AGENT_RUNNER",
+        "HUMAN_ONLY_E2EE",
+        "SYSTEM_SERVICE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.PresenceState",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UiModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Presence state of an endpoint or contact.",
+      "signature": [
+        "ONLINE",
+        "BUSY",
+        "IDLE",
+        "OFFLINE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.PrivacyLevel",
+      "kind": "ENUM",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "AGENT_ACCESSIBLE",
+        "HUMAN_ONLY"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ProgressiveDisclosureRules",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "allowDirectInference: Boolean =",
+        "allowedTopics: List<String> =",
+        "escrowedTopics: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.ProvenanceRecord",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "assertionLevel: AssertionLevel",
+        "signerKeyId: String",
+        "signatureHex: String",
+        "parentEnvelopeId: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.RecipientTarget",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "mailboxId: String",
+        "endpoint: EndpointIdentifier? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.RoutingHeader",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "sender: EndpointIdentifier",
+        "recipients: List<RecipientTarget>"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.TypedAnnotation",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "type: String",
+        "confidence: Double",
+        "attributes: Map<String, String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.model.UniversalEnvelope",
+      "kind": "DATA_CLASS",
+      "domain": "model",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/model/UniversalEnvelope.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "envelopeId: String",
+        "conversationId: String",
+        "epoch: Long",
+        "timestamp: Long",
+        "routing: RoutingHeader",
+        "provenance: ProvenanceRecord",
+        "policy: InformationBoundaryPolicy",
+        "payload: EnvelopePayload"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.AssistantSheetOverlay",
+      "kind": "COMPOSABLE",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/AssistantSheetOverlay.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Android System Assistant Floating Voice Sheet (RFC-0111).",
+      "signature": [
+        "isOpen: Boolean",
+        "isListening: Boolean",
+        "streamedGhostText: String",
+        "onProposeTask: (String) -> Unit",
+        "onDismiss: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.CommandItem",
+      "kind": "DATA_CLASS",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/CommandPaletteModal.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "title: String",
+        "subtitle: String? =",
+        "shortcut: String? =",
+        "action: () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.CommandPaletteModalView",
+      "kind": "COMPOSABLE",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/CommandPaletteModal.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "isOpen: Boolean",
+        "searchQuery: String",
+        "results: List<CommandItem>",
+        "selectedIndex: Int =",
+        "onQueryChange: (String) -> Unit",
+        "onSelectIndex: (Int) -> Unit",
+        "onExecuteItem: (CommandItem) -> Unit",
+        "onClose: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.KeyAction",
+      "kind": "ENUM",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/KeyboardShortcutRegistry.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "OPEN_COMMAND_PALETTE",
+        "OPEN_ACTION_INBOX",
+        "NAVIGATE_UP",
+        "NAVIGATE_DOWN",
+        "TOGGLE_COMPLETE",
+        "ESCAPE"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.KeyboardShortcutRegistry.resolveKeyAction",
+      "kind": "FUNCTION",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/KeyboardShortcutRegistry.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "key: String",
+        "isMetaOrCtrl: Boolean"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.NativeProcessHealth",
+      "kind": "ENUM",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/NativeProcessRecoveryBar.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "HEALTHY",
+        "CRASHED_WARM_RESTARTING",
+        "RECOVERED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.overlay.NativeProcessRecoveryBar",
+      "kind": "COMPOSABLE",
+      "domain": "overlay",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/overlay/NativeProcessRecoveryBar.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Non-blocking recovery banner alerting user when :native_inference warm-restarts (D49, RFC-0111).",
+      "signature": [
+        "health: NativeProcessHealth",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.kanban.TaskCartridgeView",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.kanban",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/kanban/TaskCartridgeView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "title: String",
+        "actorKind: TcrIntentActorKind",
+        "status: TcrDerivedStatus",
+        "estimatedSteps: Int? =",
+        "onClick: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.kanban.TaskCartridgeView#2",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.kanban",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/kanban/TaskCartridgeView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "node: TcrIntentNodeUiModel",
+        "onClick: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.livingdoc.DiffReservationBlock",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.livingdoc",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/livingdoc/DiffReservationBlock.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Unfurls completed agent reservations into inline diff blocks (RFC-0106).",
+      "signature": [
+        "reservationTitle: String",
+        "agentRoleLabel: String",
+        "diffLines: List<DiffLine>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.livingdoc.InlineToolBlock",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.livingdoc",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/livingdoc/InlineToolBlock.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "TCR molecular tool injected at the point of thought (RFC-0106).",
+      "signature": [
+        "toolName: String",
+        "statusText: String",
+        "modifier: Modifier =",
+        "content: @Composable () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.outliner.CausalJumpPill",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.outliner",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/outliner/CausalJumpPill.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "prerequisiteId: String",
+        "prerequisiteTitle: String",
+        "onJump: (String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.outliner.OutlinerNodeRow",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.outliner",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/outliner/OutlinerNodeRow.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "item: TcrOutlinerNodeItem",
+        "onToggleExpand: (String) -> Unit",
+        "onNodeClick: (String) -> Unit",
+        "onCausalJump: (String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.outliner.TcrOutlinerNodeItem",
+      "kind": "DATA_CLASS",
+      "domain": "paradigm.outliner",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/outliner/OutlinerNodeRow.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "title: String",
+        "actorKind: TcrIntentActorKind =",
+        "derivedStatus: TcrDerivedStatus =",
+        "estimatedSteps: Int? =",
+        "depth: Int =",
+        "isExpanded: Boolean =",
+        "hasChildren: Boolean =",
+        "unmetPrerequisites: List<Pair<String, String>> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.pipeline.BatonVectorLine",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.pipeline",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/pipeline/BatonVectorLine.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Animated directional line when dependency crosses tracks between Human and Agent (RFC-0111).",
+      "signature": [
+        "isHumanToAgent: Boolean",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.paradigm.pipeline.HandoffChannelView",
+      "kind": "COMPOSABLE",
+      "domain": "paradigm.pipeline",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/paradigm/pipeline/HandoffChannelView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "checkpointTitle: String",
+        "criteriaDescription: String",
+        "isCriteriaMet: Boolean",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.ActionGlyph",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/ActionGlyph.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR component: Renders a clean micro glyph inside an Actor Pill.",
+      "signature": [
+        "glyphType: GlyphType",
+        "tint: Color",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.ActorPillBadge",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/ActorPillBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Backward-compatible ActorPillBadge adapter.",
+      "signature": [
+        "backgroundColor: Color",
+        "modifier: Modifier =",
+        "isPulsing: Boolean =",
+        "content: @Composable () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.ActorPillCapsule",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/ActorPillBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Polished, compact capsule container for Actor Pills.",
+      "signature": [
+        "tokens: PillVisualTokens",
+        "modifier: Modifier =",
+        "isPulsing: Boolean =",
+        "isCommitFlash: Boolean =",
+        "isDisambiguation: Boolean =",
+        "isHovering: Boolean =",
+        "content: @Composable () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.ActorPillPip",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/FloatingActorPill.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Small inset indicator pip inside the pill capsule.",
+      "signature": [
+        "color: Color",
+        "isPulsing: Boolean",
+        "shape: PipSymbolShape =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.AgentPillState",
+      "kind": "DATA_CLASS",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillRole.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "role: PillRole",
+        "label: String",
+        "activeTaskId: String? =",
+        "xNormalized: Float =",
+        "yNormalized: Float =",
+        "isRadiatingWave: Boolean =",
+        "ghostText: String ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.BeamTeleportProjection",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillProjectionGraphics.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Style 1: Beam-Teleporting Animation: Coherent laser conduit energizes between Orchestrator and target, pulses photonic particles, and condenses into the new pill.",
+      "signature": [
+        "event: PillProjectionEvent",
+        "progress: Float",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.FloatingActorPill",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/FloatingActorPill.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR component: Redesigned interactive floating AI actor pill.",
+      "signature": [
+        "config: ActorPillConfig",
+        "status: ActorPillStatus",
+        "onSingleClick: () -> Unit",
+        "onDoubleClick: () -> Unit",
+        "modifier: Modifier =",
+        "redPillState: RedPillState? =",
+        "onThoughtDismiss: (() -> Unit)? =",
+        "onQuestionSubmit: ((String) -> Unit)? =",
+        "onConversationSubmit: ((String) -> Unit)? =",
+        "onDragCursor: ((dragDelta: Offset) -> Unit)? =",
+        "onPauseStaging: (() -> Unit)? =",
+        "onResumeStaging: (() -> Unit)? =",
+        "onAbortStaging: (() -> Unit)? =",
+        "isDarkTheme: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.HappeningEventRow",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/HappeningsHUD.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "event: HappeningsEvent"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.HappeningsHUD",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/HappeningsHUD.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR component: Happenings HUD.",
+      "signature": [
+        "events: List<HappeningsEvent>",
+        "onDismiss: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.HolographicMaterializeProjection",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillProjectionGraphics.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Style 3: Holographic Materialization: Quantum wireframe reticle projects over the destination with rapid laser scanlines, materializing the pill into solid reality.",
+      "signature": [
+        "event: PillProjectionEvent",
+        "progress: Float",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.LineReservationLock",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/LineReservationLock.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Living document line reservation wash with animated gutter shimmer (RFC-0106).",
+      "signature": [
+        "isLocked: Boolean",
+        "modifier: Modifier =",
+        "lockOwnerRole: PillRole =",
+        "content: @Composable () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.MitosisEjectProjection",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillProjectionGraphics.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Style 2: Mitosis / Fission Ejection Animation: Daughter cell buds out of orchestrator body, elongates along velocity vector, snaps free, and decelerates into resting coordinates with spring bounce.",
+      "signature": [
+        "event: PillProjectionEvent",
+        "progress: Float",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.MultiAgentPillOverlay",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/MultiAgentPillOverlay.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Absolute coordinate overlay canvas hosting all floating agent pills (RFC-0106, RFC-0111).",
+      "signature": [
+        "pills: List<AgentPillState>",
+        "modifier: Modifier =",
+        "onPillClick: ((AgentPillState) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.PersistentRedPill",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PersistentRedPill.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Molecular TCR component: Canonical Persistent Red Pill (Ember Caret Orchestrator 0xFFEF4444).",
+      "signature": [
+        "modifier: Modifier =",
+        "initialMode: RedPillTextMode =",
+        "ambientThoughtText: String =",
+        "pendingQuestionPrompt: String =",
+        "isExecuting: Boolean =",
+        "executionError: String? =",
+        "suggestedActions: List<String> =",
+        "onExecutePrompt: ((prompt: String) -> Unit)? =",
+        "historyEntries: List<RedPillHistoryEntry> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.PillConstellationOverlay",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillConstellationOverlay.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Organism TCR component: Hosts the multi-pill constellation overlay (Option B).",
+      "signature": [
+        "manager: PillConstellationManager",
+        "cursorX: Int",
+        "cursorY: Int",
+        "modifier: Modifier =",
+        "onDragCursor: ((Offset) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.PillProjectionOverlay",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillProjectionGraphics.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Orchestrator Spawning Animation Overlay: Projects a new worker pill into existence using one of 3 distinct animation styles: 1.",
+      "signature": [
+        "event: PillProjectionEvent",
+        "onAnimationComplete: (projectionId: String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.PillRole",
+      "kind": "ENUM",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillRole.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Roles and visual identities for the Multi-Agent Pill Overlay (RFC-0106, RFC-0111).",
+      "signature": [
+        "ORCHESTRATOR_RED",
+        "WORKER_CODE_BLUE",
+        "VERIFIER_GREEN",
+        "RESEARCH_VIOLET"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.PillVisualTokens",
+      "kind": "DATA_CLASS",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/ActorPillBadge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Visual styling tokens for an Actor Pill, resolved from actor role, configured colors, active theme (light/dark), and execution status.",
+      "signature": [
+        "isEmber: Boolean",
+        "surfaceBrush: Brush",
+        "borderStroke: BorderStroke",
+        "contentColor: Color",
+        "actorAccentColor: Color",
+        "pipColor: Color",
+        "haloColor: Color",
+        "elevation: Dp",
+        "shadowAmbientColor: Color",
+        "shadowSpotColor: Color",
+        "beakColor: Color",
+        "ringTrackColor: Color"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.RadialCountdownRing",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/RadialCountdownRing.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Atomic TCR component: Radial countdown ring with calibrated sweep progress.",
+      "signature": [
+        "progress: Float",
+        "ringColor: Color",
+        "modifier: Modifier =",
+        "trackColor: Color =",
+        "strokeWidth: Dp =",
+        "showRadarSweep: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.RedPillConversationHistoryPanel",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/FloatingActorPill.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Mode c: Full blown multi-turn conversation history HUD and entry box.",
+      "signature": [
+        "history: List<RedPillTurn>",
+        "onSubmit: (String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.RedPillQuestionBubble",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/FloatingActorPill.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Mode b: Beige-ish question bubble with question text, interactive input box, and submit action.",
+      "signature": [
+        "prompt: String",
+        "onSubmit: (String) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.RedPillThoughtBubble",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/FloatingActorPill.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Mode a: Beige-ish thought bubble with dashed outline anchored to the Red Pill.",
+      "signature": [
+        "text: String",
+        "onDismiss: (() -> Unit)? =",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.TargetObjectProjectionCone",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/PillProjectionGraphics.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Directional volumetric projection cone (warm orange-ish by default) emitted from an Actor Pill to highlight a target document object (word, phrase, paraphrase).",
+      "signature": [
+        "cone: PillTargetCone",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.TranscriptEntryCard",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/TranscriptSplitDrawer.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "entry: TranscriptEntry"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.TranscriptSplitDrawer",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/TranscriptSplitDrawer.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR component: Responsive transcript split drawer.",
+      "signature": [
+        "entries: List<TranscriptEntry>",
+        "onClose: () -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.TravelingVoiceCaret",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/TravelingVoiceCaret.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Traveling STT Caret Pill (Red Pill) (RFC-0106, RFC-0111).",
+      "signature": [
+        "isRecording: Boolean",
+        "ghostText: String",
+        "modifier: Modifier =",
+        "audioLevels: List<Float> =",
+        "onCommitText: ((String) -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.WaveSignalingCanvas",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/WaveSignalingCanvas.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Concentric radiating ripple emitter (\"Agent working here\") (RFC-0106).",
+      "signature": [
+        "modifier: Modifier =",
+        "waveColor: Color =",
+        "size: Dp =",
+        "isActive: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.pill.WorkerPillNode",
+      "kind": "COMPOSABLE",
+      "domain": "pill",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/pill/WorkerPillNode.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "role: PillRole",
+        "label: String",
+        "activeTaskTitle: String? =",
+        "modifier: Modifier =",
+        "onClick: (() -> Unit)? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.CanvasMinimapView",
+      "kind": "COMPOSABLE",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/CanvasMinimapView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "nodePositions: Map<String, Pair<Float, Float>>",
+        "viewport: ViewportTransform",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.ForceDirectedLayout.layoutDag",
+      "kind": "FUNCTION",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/ForceDirectedLayout.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "nodeIds: List<String>",
+        "edges: List<Pair<String, String>> =",
+        "canvasWidth: Float =",
+        "canvasHeight: Float ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.InfiniteZuiCanvasView",
+      "kind": "COMPOSABLE",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/InfiniteZuiCanvasView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "nodes: List<SpatialCanvasNodeItem>",
+        "edges: List<SpatialCanvasEdgeItem>",
+        "positions: Map<String, Pair<Float, Float>>",
+        "statuses: Map<String, TcrDerivedStatus>",
+        "viewport: ViewportTransform",
+        "lod: LodLevel",
+        "onPan: (deltaX: Float, deltaY: Float) -> Unit",
+        "onZoom: (zoomFactor: Float) -> Unit",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.LodLevel",
+      "kind": "ENUM",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/SemanticZoomManager.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "MACRO_GALAXY",
+        "MESO_CLUSTER",
+        "MICRO_BLUEPRINT"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.SemanticZoomManager.computeLod",
+      "kind": "FUNCTION",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/SemanticZoomManager.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "zoom: Float"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.SpatialCanvasEdgeItem",
+      "kind": "DATA_CLASS",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/InfiniteZuiCanvasView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "fromNodeId: String",
+        "toNodeId: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.SpatialCanvasNodeItem",
+      "kind": "DATA_CLASS",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/InfiniteZuiCanvasView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "title: String",
+        "type: TcrIntentNodeType =",
+        "actorKind: TcrIntentActorKind ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.SpatialNodeLayoutItem",
+      "kind": "DATA_CLASS",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/ForceDirectedLayout.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "x: Float",
+        "y: Float",
+        "vx: Float =",
+        "vy: Float ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.canvas.ViewportTransform",
+      "kind": "DATA_CLASS",
+      "domain": "spatial.canvas",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/canvas/ViewportTransform.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "panX: Float =",
+        "panY: Float =",
+        "zoom: Float ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.edge.BezierCausalEdge.drawBezierEdge",
+      "kind": "FUNCTION",
+      "domain": "spatial.edge",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/edge/BezierCausalEdge.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "drawScope: DrawScope",
+        "start: Offset",
+        "end: Offset",
+        "color: Color",
+        "strokeWidth: Float ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.edge.EdgeCollisionRouter.routeAroundObstacles",
+      "kind": "FUNCTION",
+      "domain": "spatial.edge",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/edge/EdgeCollisionRouter.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "start: Offset",
+        "end: Offset",
+        "obstacles: List<Rect>"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.node.AtomicTaskCapsule.drawCapsule",
+      "kind": "FUNCTION",
+      "domain": "spatial.node",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/node/AtomicTaskCapsule.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "drawScope: DrawScope",
+        "center: Offset",
+        "width: Float",
+        "height: Float",
+        "fillColor: Color",
+        "borderColor: Color"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.node.GoalHexagonNode.drawHexagon",
+      "kind": "FUNCTION",
+      "domain": "spatial.node",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/node/GoalHexagonNode.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "drawScope: DrawScope",
+        "center: Offset",
+        "radius: Float",
+        "fillColor: Color",
+        "borderColor: Color"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.node.GroupNebulaRenderer.drawNebula",
+      "kind": "FUNCTION",
+      "domain": "spatial.node",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/node/GroupNebulaRenderer.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "drawScope: DrawScope",
+        "topLeft: Offset",
+        "size: Size",
+        "accentColor: Color",
+        "label: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.node.SatelliteCriterionNode.drawDiamond",
+      "kind": "FUNCTION",
+      "domain": "spatial.node",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/node/SatelliteCriterionNode.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "drawScope: DrawScope",
+        "center: Offset",
+        "size: Float",
+        "fillColor: Color",
+        "borderColor: Color"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.radar.MobileHorizonArcView",
+      "kind": "COMPOSABLE",
+      "domain": "spatial.radar",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/radar/MobileHorizonArcView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Mobile 180-degree bottom-arc thumb-zone view (Design 4, RFC-0111).",
+      "signature": [
+        "nodes: List<RadarNodeItem>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.radar.RadarNodeItem",
+      "kind": "DATA_CLASS",
+      "domain": "spatial.radar",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/radar/MobileHorizonArcView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "title: String",
+        "status: TcrDerivedStatus",
+        "angleRad: Float",
+        "distanceRatio: Float",
+        "zone: RadarZone"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.radar.RadarZone",
+      "kind": "ENUM",
+      "domain": "spatial.radar",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/radar/MobileHorizonArcView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "STRIKE_ZONE",
+        "ORBIT_ZONE",
+        "DEEP_SYSTEM",
+        "INTERMEDIATE_ORBIT",
+        "OUTER_PERIMETER"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.radar.RadialRadarView",
+      "kind": "COMPOSABLE",
+      "domain": "spatial.radar",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/radar/RadialRadarView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Desktop 360-degree radial radar HUD (Design 4, RFC-0111).",
+      "signature": [
+        "nodes: List<RadarNodeItem>",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.radar.colorForTcrStatus",
+      "kind": "FUNCTION",
+      "domain": "spatial.radar",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/radar/MobileHorizonArcView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "status: TcrDerivedStatus"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.schematic.BreadboardSchematicView",
+      "kind": "COMPOSABLE",
+      "domain": "spatial.schematic",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/schematic/BreadboardSchematicView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Design 5: The Logic Circuit Breadboard (RFC-0111).",
+      "signature": [
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.spatial.schematic.TransitMetroMapView",
+      "kind": "COMPOSABLE",
+      "domain": "spatial.schematic",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/spatial/schematic/TransitMetroMapView.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Design 2: The Transit Metro Map (RFC-0111).",
+      "signature": [
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.theme.ProvenanceColors",
+      "kind": "DATA_CLASS",
+      "domain": "theme",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/theme/TcrTheme.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Custom color palette for the 4-Party Conversation Mesh & Agentic Provenance.",
+      "signature": [
+        "humanDirectBackground: Color",
+        "humanDirectContent: Color",
+        "agentRunnerBackground: Color",
+        "agentRunnerContent: Color",
+        "humanOnlyBackground: Color",
+        "humanOnlyContent: Color",
+        "systemServiceBackground: Color",
+        "systemServiceContent: Color",
+        "cueChipBackground: Color",
+        "cueChipContent: Color",
+        "waveformBar: Color",
+        "waveformProgress: Color",
+        "pulseActive: Color"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.theme.TcrTheme",
+      "kind": "COMPOSABLE",
+      "domain": "theme",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/theme/TcrTheme.kt",
+      "status": "STABLE",
+      "contract": "1.0.0",
+      "summary": "Wraps content in the canonical TCR Material3 theme (colors, shapes, typography).",
+      "signature": [
+        "darkTheme: Boolean =",
+        "content: @Composable () -> Unit"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.theme.colorForTcrActor",
+      "kind": "FUNCTION",
+      "domain": "theme",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/theme/Tokens.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "actorKind: TcrIntentActorKind"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.theme.colorForTcrStatus",
+      "kind": "FUNCTION",
+      "domain": "theme",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/theme/Tokens.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "status: TcrDerivedStatus"
+      ]
+    }
+  ]
+}
