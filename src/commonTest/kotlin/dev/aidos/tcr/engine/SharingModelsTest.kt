@@ -33,3 +33,15 @@ class SharingModelsTest {
         assertEquals(false, LanSharingUiState().enabled)
     }
 }
+
+class ShellScopeTest {
+    @Test
+    fun scopeStringRoundTrips() {
+        assertEquals("shell:.", shellScopeString("", null))
+        assertEquals("shell:sub|git,gradle", shellScopeString(" sub ", listOf("git", "gradle")))
+        assertEquals("sub" to listOf("git", "gradle"), parseShellScope("shell:sub|git,gradle"))
+        assertEquals("." to null, parseShellScope("shell:."))
+        assertNull(parseShellScope("fs:/x"))
+        assertNull(parseShellScope(null))
+    }
+}
