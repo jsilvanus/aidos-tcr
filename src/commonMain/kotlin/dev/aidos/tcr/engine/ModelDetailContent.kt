@@ -32,6 +32,10 @@ fun ModelDetailContent(
     preferredContext: Int,
     actions: ModelDetailActions,
     modifier: Modifier = Modifier,
+    /** True once the user has accepted the model's license. */
+    licenseAccepted: Boolean = false,
+    /** Non-null shows an "Accept License" button while the license is not yet accepted. */
+    onAcceptLicense: (() -> Unit)? = null,
 ) {
     val error = state.error
     val model = state.model
@@ -99,6 +103,13 @@ fun ModelDetailContent(
                     modelUrl = model.modelUrl,
                     onReviewTerms = { model.modelUrl?.let(actions.onOpenUrl) }
                 )
+
+                if (licenseAccepted || onAcceptLicense != null) {
+                    LicenseAcceptanceStatusCard(
+                        licenseAccepted = licenseAccepted,
+                        onAcceptLicense = onAcceptLicense,
+                    )
+                }
 
                 if (state.isInstalled) {
                     Card(
@@ -595,4 +606,47 @@ private fun DecimalField(label: String, value: Float?, hint: String, onValue: (F
         singleLine = true,
         modifier = Modifier.fillMaxWidth(),
     )
+}
+
+@Composable
+private fun LicenseAcceptanceStatusCard(
+    licenseAccepted: Boolean,
+    onAcceptLicense: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedCard(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = if (licenseAccepted) {
+                MaterialTheme.colorScheme.secondaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
+            }
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = if (licenseAccepted) {
+                    "License accepted"
+                } else {
+                    "License acceptance required before running this model."
+                },
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = if (licenseAccepted) {
+                    MaterialTheme.colorScheme.onSecondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
+            )
+            if (!licenseAccepted && onAcceptLicense != null) {
+                Button(onClick = onAcceptLicense) {
+                    Text("Accept License")
+                }
+            }
+        }
+    }
 }

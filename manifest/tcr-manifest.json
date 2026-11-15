@@ -1506,6 +1506,130 @@
       ]
     },
     {
+      "id": "dev.aidos.tcr.engine.GroupPairingKind",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "What a pairing in progress is for, which decides the heading the user sees.",
+      "signature": [
+        "PAIR",
+        "ENROL_OTHER",
+        "ENROLLED_BY_OTHER"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.GroupPairingUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A pairing waiting for the user to compare the six-digit [code] with the other screen.",
+      "signature": [
+        "id: String",
+        "kind: GroupPairingKind",
+        "code: String",
+        "confirmedHere: Boolean =",
+        "confirmedThere: Boolean ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.GroupPeerUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A paired or group-linked device and what it last reported.",
+      "signature": [
+        "id: String",
+        "label: String?",
+        "shortId: String",
+        "connected: Boolean",
+        "stateName: String",
+        "isPaired: Boolean =",
+        "viaGroup: Boolean =",
+        "viaPaired: Boolean =",
+        "draining: Boolean =",
+        "batteryPercent: Int? =",
+        "charging: Boolean? =",
+        "engineVersion: String? =",
+        "ramOfferedBytes: Long? =",
+        "modelIds: List<String> =",
+        "removableFromGroupIds: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.GroupSplitUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Layer split hosting on this device (RFC-0105 phase 3); null in [GroupsUiState] where the host offers none.",
+      "signature": [
+        "available: Boolean",
+        "activeModelId: String? =",
+        "status: String? =",
+        "models: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.GroupUi",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "id: String",
+        "label: String",
+        "isAdmin: Boolean"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.GroupsPane",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsPane.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Organism TCR Component: GroupsPane Inference groups (RFC-0105): turn sharing on, pair with or enrol another device by exchanging an invite, compare the six-digit code, inspect linked devices and serve",
+      "signature": [
+        "state: GroupsUiState",
+        "actions: GroupsActions",
+        "modifier: Modifier =",
+        "initialInvite: String =",
+        "qrCode: @Composable (String) -> Unit ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.GroupsUiState",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "sharingEnabled: Boolean =",
+        "isEngineRunning: Boolean =",
+        "nodeStarted: Boolean =",
+        "error: String? =",
+        "actionError: String? =",
+        "thisDevice: String =",
+        "pairings: List<GroupPairingUi> =",
+        "lastPairingFailure: String? =",
+        "groups: List<GroupUi> =",
+        "peers: List<GroupPeerUi> =",
+        "shownInvite: String? =",
+        "split: GroupSplitUi? ="
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.engine.HfTokenStatus",
       "kind": "DATA_CLASS",
       "domain": "engine",
@@ -1642,7 +1766,7 @@
       "domain": "engine",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ModelDetailContent.kt",
       "status": "STABLE",
-      "contract": "1.0.0",
+      "contract": "1.1.0",
       "summary": "Organism TCR Component: ModelDetailContent Model detail, acquire, and execution diagnostics view: - Artifact format and quantization metadata - Preferred context slider and RAM fit verdict lines - LLa",
       "signature": [
         "state: ModelDetailState",
@@ -1650,7 +1774,9 @@
         "engineState: EngineState",
         "preferredContext: Int",
         "actions: ModelDetailActions",
-        "modifier: Modifier ="
+        "modifier: Modifier =",
+        "licenseAccepted: Boolean =",
+        "onAcceptLicense: (() -> Unit)? ="
       ]
     },
     {
@@ -2369,6 +2495,18 @@
       ]
     },
     {
+      "id": "dev.aidos.tcr.engine.capacityLine",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "this: GroupPeerUi"
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.engine.defaultTextFor",
       "kind": "FUNCTION",
       "domain": "engine",
@@ -2500,6 +2638,18 @@
       "summary": "Returns the theme status color for a given model fit verdict.",
       "signature": [
         "verdict: ModelFitVerdict"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.statusLine",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/GroupsModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "One-line peer status and capacity summaries, shared so every host words them the same.",
+      "signature": [
+        "this: GroupPeerUi"
       ]
     },
     {
