@@ -1275,7 +1275,7 @@
       "domain": "engine",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
       "status": "EXPERIMENTAL",
-      "contract": "0.1.0",
+      "contract": "0.1.1",
       "summary": "Connected app approval record presentation model.",
       "signature": [
         "packageName: String",
@@ -1287,7 +1287,11 @@
         "attemptCount: Int =",
         "requestCount: Int =",
         "sdkVersion: String? =",
-        "apiVersion: Int? ="
+        "apiVersion: Int? =",
+        "agentAllowed: Boolean =",
+        "localityLimit: String? =",
+        "localityRefusalCount: Int =",
+        "lastLocalityRefusalAt: String? ="
       ]
     },
     {
@@ -1353,7 +1357,7 @@
       "domain": "engine",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/ConnectedAppsPane.kt",
       "status": "STABLE",
-      "contract": "1.0.0",
+      "contract": "1.1.0",
       "summary": "Organism TCR Component: ConnectedAppsPane Connected Apps approval & authorization management pane (RFC-0103, Phase D).",
       "signature": [
         "approvals: List<AppApprovalRecordUi>",
@@ -1363,7 +1367,9 @@
         "onRevoke: (String) -> Unit",
         "onUndoDeny: (String) -> Unit",
         "modifier: Modifier =",
-        "notRunningText: String ="
+        "notRunningText: String =",
+        "onSetAgentAllowed: ((packageName: String, allowed: Boolean) -> Unit)? =",
+        "onSetLocalityLimit: ((packageName: String, limit: String?) -> Unit)? ="
       ]
     },
     {
@@ -1455,6 +1461,21 @@
       "summary": "",
       "signature": [
         "download: DownloadProgress",
+        "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.EngineControlCard",
+      "kind": "COMPOSABLE",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineControlCard.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "The Engine ON/OFF card.",
+      "signature": [
+        "isEngineRunning: Boolean",
+        "engineStateName: String",
+        "hint: String",
         "modifier: Modifier ="
       ]
     },

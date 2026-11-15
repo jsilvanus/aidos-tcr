@@ -425,6 +425,12 @@ data class AppApprovalRecordUi(
     val requestCount: Int = 0,
     val sdkVersion: String? = null,
     val apiVersion: Int? = null,
+    /** D49: whether the app may start agent runs (shown only when the host wires [onSetAgentAllowed]). */
+    val agentAllowed: Boolean = false,
+    /** RFC-0104 per-app locality cap: `local_only`, `trusted_cluster`, `any`, or null for the Engine default. */
+    val localityLimit: String? = null,
+    val localityRefusalCount: Int = 0,
+    val lastLocalityRefusalAt: String? = null,
 )
 
 /**
