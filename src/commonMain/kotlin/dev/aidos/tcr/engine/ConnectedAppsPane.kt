@@ -33,6 +33,10 @@ fun ConnectedAppsPane(
     onUndoDeny: (String) -> Unit,
     modifier: Modifier = Modifier,
     notRunningText: String = "The Engine is not running. Start it from Home to manage app access.",
+    /** D49: grant or withdraw an approved app's agent access; null hides the control. */
+    onSetAgentAllowed: ((packageName: String, allowed: Boolean) -> Unit)? = null,
+    /** RFC-0104: set or clear a per-app locality cap; null hides the control. */
+    onSetLocalityLimit: ((packageName: String, limit: String?) -> Unit)? = null,
 ) {
     val pending = approvals.filter { it.status == AppApprovalStatus.PENDING }
     val approved = approvals.filter { it.status == AppApprovalStatus.APPROVED }
@@ -65,6 +69,16 @@ fun ConnectedAppsPane(
             item { SectionTitle("Approved", Color(0xFF22C55E)) }
             items(approved, key = { it.packageName }) { app ->
                 AppCard(app) {
+                    if (onSetLocalityLimit != null) {
+                        TextButton(onClick = { onSetLocalityLimit(app.packageName, nextLocalityLimit(app.localityLimit)) }) {
+                            Text("Locality: ${localityLimitLabel(app.localityLimit)}")
+                        }
+                    }
+                    if (onSetAgentAllowed != null) {
+                        TextButton(onClick = { onSetAgentAllowed(app.packageName, !app.agentAllowed) }) {
+                            Text(if (app.agentAllowed) "Withdraw agent access" else "Allow agent runs")
+                        }
+                    }
                     TextButton(onClick = { onRevoke(app.packageName) }) {
                         Text("Revoke", color = Color(0xFFEF4444))
                     }
@@ -119,7 +133,8 @@ private fun EmptyNote(text: String) {
 }
 
 @Composable
-private fun AppCard(app: AppApprovalRecordUi, actions: @Composable RowScope.() -> Unit) {
+@OptIn(ExperimentalLayoutApi::class)
+private fun AppCard(app: AppApprovalRecordUi, actions: @Composable () -> Unit) {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -145,12 +160,22 @@ private fun AppCard(app: AppApprovalRecordUi, actions: @Composable RowScope.() -
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp),
             )
-            Row(
+            if (app.localityLimit != null || app.localityRefusalCount > 0) {
+                Text(
+                    "Locality cap: ${localityLimitLabel(app.localityLimit)} · locality refusals: ${app.localityRefusalCount}" +
+                        (app.lastLocalityRefusalAt?.let { " (last $it)" } ?: ""),
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 2.dp),
+                )
+            }
+            // FlowRow so three actions (locality, agent access, revoke) wrap on a phone instead of clipping.
+            FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 6.dp),
                 horizontalArrangement = Arrangement.End,
-                content = actions,
+                content = { actions() },
             )
         }
     }
@@ -161,4 +186,19 @@ internal fun clientVersionsSuffix(app: AppApprovalRecordUi): String {
     val api = app.apiVersion?.let { "api $it" }
     val versions = listOfNotNull(sdk, api).joinToString(", ")
     return if (versions.isEmpty()) "" else " · $versions"
+}
+
+internal fun localityLimitLabel(limit: String?): String = when (limit) {
+    "local_only" -> "local only"
+    "trusted_cluster" -> "trusted cluster"
+    "any" -> "any"
+    else -> "engine default"
+}
+
+/** Cycles the per-app cap: default → local only → trusted cluster → any → default. */
+internal fun nextLocalityLimit(current: String?): String? = when (current) {
+    null -> "local_only"
+    "local_only" -> "trusted_cluster"
+    "trusted_cluster" -> "any"
+    else -> null
 }

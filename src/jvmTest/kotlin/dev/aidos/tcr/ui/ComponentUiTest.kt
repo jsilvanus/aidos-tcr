@@ -15,6 +15,7 @@ import dev.aidos.tcr.agent.AgentPlacementBadge
 import dev.aidos.tcr.engine.AppApprovalRecordUi
 import dev.aidos.tcr.engine.AppApprovalStatus
 import dev.aidos.tcr.engine.ConnectedAppsPane
+import dev.aidos.tcr.engine.EngineControlCard
 import dev.aidos.tcr.generative.GenerativeUiRegistry
 import dev.aidos.tcr.mesh.ApprovalCard
 import dev.aidos.tcr.mesh.ContactRow
@@ -121,6 +122,44 @@ class ComponentUiTest {
         waitForIdle()
         onNodeWithText("engine is off").assertDoesNotExist()
         onNodeWithText("No apps have requested access yet.", substring = true).assertIsDisplayed()
+    }
+
+    @Test fun connectedAppsPaneAgentAndLocalityControlsAreOptInAndCycleTheCap() = runComposeUiTest {
+        val log = mutableListOf<String>()
+        var wired by mutableStateOf(false)
+        setContent {
+            TcrTheme {
+                ConnectedAppsPane(
+                    approvals = listOf(app("p.ok", AppApprovalStatus.APPROVED).copy(localityLimit = "local_only", localityRefusalCount = 2)),
+                    isEngineRunning = true,
+                    onApprove = {}, onDeny = {}, onRevoke = {}, onUndoDeny = {},
+                    onSetAgentAllowed = if (wired) ({ p, a -> log += "agent:$p:$a" }) else null,
+                    onSetLocalityLimit = if (wired) ({ p, l -> log += "limit:$p:$l" }) else null,
+                )
+            }
+        }
+        onNodeWithText("Allow agent runs").assertDoesNotExist()
+        wired = true
+        waitForIdle()
+        onNodeWithText("Locality cap: local only · locality refusals: 2").assertIsDisplayed()
+        onNodeWithText("Allow agent runs").performClick()
+        onNodeWithText("Locality: local only").performClick()
+        assertEquals(listOf("agent:p.ok:true", "limit:p.ok:trusted_cluster"), log)
+    }
+
+    @Test fun engineControlCardReflectsStateAndAcceptsAGestureModifier() = runComposeUiTest {
+        var running by mutableStateOf(false)
+        setContent {
+            TcrTheme {
+                EngineControlCard(running, "READY", "Hold 1 second to turn on")
+            }
+        }
+        onNodeWithText("Engine is OFF").assertIsDisplayed()
+        onNodeWithText("Hold 1 second to turn on").assertIsDisplayed()
+        running = true
+        waitForIdle()
+        onNodeWithText("Engine is ON").assertIsDisplayed()
+        onNodeWithText("READY").assertIsDisplayed()
     }
 
     // --- agent.AgentPlacementBadge -----------------------------------------------------
