@@ -11,7 +11,11 @@ version = "0.1.0"
 
 kotlin {
     jvmToolchain(21)
-    jvm()
+    // Consumers (aidos Engine, Amp) run on JDK 17 and Android; bytecode above 17 fails there with
+    // UnsupportedClassVersionError, so build on 21 but emit 17.
+    jvm {
+        compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) }
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -53,4 +57,9 @@ tasks.withType<Test>().configureEach {
     inputs.dir("src/commonMain/kotlin")
     // Lets `-Dtcr.updateManifest=true` reach the test JVM (see ManifestSyncTest).
     System.getProperty("tcr.updateManifest")?.let { systemProperty("tcr.updateManifest", it) }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
 }
