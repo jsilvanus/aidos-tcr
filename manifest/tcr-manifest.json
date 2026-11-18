@@ -4,6 +4,19 @@
   "libraryVersion": "0.1.0",
   "components": [
     {
+      "id": "dev.aidos.tcr.a2ui.A2uiDensity",
+      "kind": "ENUM",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiRenderer.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "How tightly a manifest is laid out.",
+      "signature": [
+        "COMPACT",
+        "REGULAR"
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.a2ui.A2uiManifest",
       "kind": "DATA_CLASS",
       "domain": "a2ui",
@@ -42,6 +55,22 @@
       "summary": "",
       "signature": [
         "json: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.a2ui.A2uiRenderer",
+      "kind": "COMPOSABLE",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiRenderer.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Draws a validated [A2uiManifest] using only TCR components (RFC-0124 generative layer, RFC-0106 §1).",
+      "signature": [
+        "manifest: A2uiManifest",
+        "density: A2uiDensity",
+        "onAction: (actionId: String) -> Unit",
+        "actionsEnabled: Boolean =",
+        "modifier: Modifier ="
       ]
     },
     {
