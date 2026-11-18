@@ -4,6 +4,95 @@
   "libraryVersion": "0.1.0",
   "components": [
     {
+      "id": "dev.aidos.tcr.a2ui.A2uiManifest",
+      "kind": "DATA_CLASS",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "A validated A2UI v1 manifest (RFC-0106 §1, RFC-0124 generative layer).",
+      "signature": [
+        "manifestId: String",
+        "targetNodeId: String",
+        "root: A2uiNode"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.a2ui.A2uiNode",
+      "kind": "DATA_CLASS",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiModel.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "One component in a manifest tree.",
+      "signature": [
+        "type: String",
+        "props: Map<String, A2uiValue>",
+        "slots: Map<String, A2uiNode>",
+        "children: List<A2uiNode>"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.a2ui.A2uiParser.parse",
+      "kind": "FUNCTION",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiParser.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "json: String"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.a2ui.ComponentSpec",
+      "kind": "DATA_CLASS",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiCatalog.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "One allowlisted A2UI type.",
+      "signature": [
+        "type: String",
+        "tcrId: String?",
+        "contract: String",
+        "props: Map<String, PropSpec>",
+        "slots: Set<String>",
+        "allowsChildren: Boolean",
+        "childTypes: Set<String>? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.a2ui.PropKind",
+      "kind": "ENUM",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiCatalog.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "TEXT",
+        "NUMBER",
+        "BOOL",
+        "ENUM"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.a2ui.PropSpec",
+      "kind": "DATA_CLASS",
+      "domain": "a2ui",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/a2ui/A2uiCatalog.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "",
+      "signature": [
+        "kind: PropKind",
+        "required: Boolean =",
+        "enumValues: Set<String> =",
+        "maxLength: Int ="
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.actor.ActorPillConfig",
       "kind": "DATA_CLASS",
       "domain": "actor",

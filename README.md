@@ -39,6 +39,7 @@ For the complete architectural guide, see [UI_MANUAL.md](UI_MANUAL.md) or Aidos'
 | `dev.aidos.tcr.mcp` | `McpServersPane`, `McpModels` | MCP server discovery, catalog inspect, tool adoption |
 | `dev.aidos.tcr.mesh` | `ConversationInputBar`, `MessageBubble`, `ContactRow`, `PrivacySealBadge`, `ApprovalCard`, `WaveformVisualizer` | 4-party messaging & E2EE provenance (Agentic Messenger, Aidos) |
 | `dev.aidos.tcr.generative` | `GenerativeUiRegistry` | Dynamic component resolution & spatial canvas binding |
+| `dev.aidos.tcr.a2ui` | `A2uiParser`, `A2uiCatalog`, `A2uiManifest` | Generative (A2UI) v1 manifests: fail-closed parser and allowlist of TCR components (RFC-0106, RFC-0124) |
 
 ---
 
