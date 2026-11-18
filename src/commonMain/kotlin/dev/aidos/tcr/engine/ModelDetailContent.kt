@@ -126,13 +126,24 @@ fun ModelDetailContent(
                     }
 
                     var showDeleteConfirm by remember { mutableStateOf(false) }
+                    // Delete after the dialog is gone: deleting flips isInstalled and removes this subtree in
+                    // the same frame the dialog window closes, which crashes Compose desktop ("layouts are
+                    // not part of same hierarchy").
+                    var deleteRequested by remember { mutableStateOf(false) }
+                    LaunchedEffect(deleteRequested) {
+                        if (!deleteRequested) return@LaunchedEffect
+                        withFrameNanos { }
+                        withFrameNanos { }
+                        deleteRequested = false
+                        actions.onDelete()
+                    }
                     if (showDeleteConfirm) {
                         AlertDialog(
                             onDismissRequest = { showDeleteConfirm = false },
                             confirmButton = {
                                 TextButton(onClick = {
-                                    actions.onDelete()
                                     showDeleteConfirm = false
+                                    deleteRequested = true
                                 }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
                             },
                             dismissButton = {

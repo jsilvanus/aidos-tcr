@@ -101,6 +101,8 @@ class ModelsUiTest {
         assertEquals(null, deleted, "nothing is deleted before the dialog is confirmed")
         onNodeWithText("Delete Model").assertIsDisplayed()
         onNodeWithText("Delete").performClick()
+        waitForIdle()
+        onNodeWithText("Delete Model").assertDoesNotExist()
         assertEquals("acme/echo", deleted)
     }
 
