@@ -100,6 +100,17 @@ private fun EngineNotReadyBanner(state: EngineState) {
 @Composable
 private fun LocalModelsPane(state: ModelsPaneState, actions: ModelsPaneActions) {
     var showDeleteDialog by remember { mutableStateOf<CookbookModel?>(null) }
+    // The delete runs only after the confirm dialog has left composition. Removing the model (and its list
+    // item) in the same frame the dialog window closes crashes Compose desktop with "layouts are not part of
+    // same hierarchy".
+    var pendingDelete by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(pendingDelete) {
+        val id = pendingDelete ?: return@LaunchedEffect
+        withFrameNanos { }
+        withFrameNanos { }
+        pendingDelete = null
+        actions.onDeleteModel(id)
+    }
     val localModels = state.localModels
     val isLoading = state.isLoading
 
@@ -141,8 +152,8 @@ private fun LocalModelsPane(state: ModelsPaneState, actions: ModelsPaneActions) 
             confirmButton = {
                 TextButton(
                     onClick = {
-                        actions.onDeleteModel(model.id)
                         showDeleteDialog = null
+                        pendingDelete = model.id
                     }
                 ) {
                     Text("Delete", color = Color(0xFFEF4444))
