@@ -1,5 +1,9 @@
 package dev.aidos.tcr.engine
 
+import dev.aidos.tcr.agent.AgentUsageMeterUi
+import dev.aidos.tcr.agent.formatAgentLastUsage
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -114,5 +118,82 @@ class EngineModelsTest {
 
         assertTrue(formatActionableErrorMessage("device has insufficient_memory to run").contains("Out of memory"))
         assertTrue(formatActionableErrorMessage("peer_busy right now").contains("busy"))
+    }
+
+    @Test
+    fun usageCategoryDisplayNames() {
+        assertEquals("Chat", UsageCategory.CHAT.displayName())
+        assertEquals("Embeddings", UsageCategory.EMBEDDINGS.displayName())
+        assertEquals("Decisions", UsageCategory.DECISIONS.displayName())
+        assertEquals("Speech to Text", UsageCategory.STT.displayName())
+        assertEquals("Vision", UsageCategory.VISION.displayName())
+        assertEquals("Text to Speech", UsageCategory.TTS.displayName())
+        assertEquals(6, UsageCategory.entries.size)
+    }
+
+    @Test
+    fun engineUsageSnapshotSerializationRoundTrip() {
+        val snapshot = EngineUsageSnapshot(
+            activeRequests = 2,
+            queuedRequests = 3,
+            maxConcurrency = 4,
+            lastUsage = LastUsageEvent(
+                category = UsageCategory.CHAT,
+                summary = "312 tok",
+                timestampMs = 10_000L,
+            ),
+            session = mapOf(
+                UsageCategory.CHAT to CategoryUsage(requests = 5, tokens = 1200),
+                UsageCategory.STT to CategoryUsage(requests = 1, audioSeconds = 12.5),
+            ),
+            lifetime = mapOf(
+                UsageCategory.VISION to CategoryUsage(requests = 4, tokens = 800, images = 4),
+            ),
+        )
+        val state = StatusUiState(isEngineRunning = true, usage = snapshot)
+        val json = Json { encodeDefaults = true }
+        val encoded = json.encodeToString(state)
+        val decoded = json.decodeFromString<StatusUiState>(encoded)
+        assertEquals(state, decoded)
+        assertEquals(0.5f, snapshot.loadFraction)
+        assertNull(StatusUiState().usage)
+    }
+
+    @Test
+    fun usageFormattingHelpers() {
+        assertEquals("No usage yet", formatLastUsage(null, 20_000L))
+        val event = LastUsageEvent(UsageCategory.CHAT, "312 tok", 8_000L)
+        assertEquals("Last: chat · 312 tok · 12s ago", formatLastUsage(event, 20_000L))
+
+        assertEquals("0 req", formatCategoryUsage(null))
+        assertEquals("0 req", formatCategoryUsage(CategoryUsage()))
+        assertEquals("2 req · 512 tok", formatCategoryUsage(CategoryUsage(requests = 2, tokens = 512)))
+        assertEquals("1 req · 4.5s", formatCategoryUsage(CategoryUsage(requests = 1, audioSeconds = 4.5)))
+        assertEquals("3 req · 100 tok · 2 img", formatCategoryUsage(CategoryUsage(requests = 3, tokens = 100, images = 2)))
+    }
+
+    @Test
+    fun agentUsageMeterUiSerializationAndHelpers() {
+        val meter = AgentUsageMeterUi(
+            currentSteps = 3,
+            maxSteps = 8,
+            tokensUsed = 420,
+            costUnits = 0L,
+            localCalls = 3L,
+            remoteCalls = 1L,
+            projectTotalCalls = 10L,
+            projectTotalTokens = 2400L,
+            projectCostUnits = 0L,
+            lastUsageSummary = "140 tok",
+            lastUsageTimestampMs = 5_000L,
+        )
+        val encoded = Json.encodeToString(meter)
+        val decoded = Json.decodeFromString<AgentUsageMeterUi>(encoded)
+        assertEquals(meter, decoded)
+        assertEquals("Local · free", meter.costLabel)
+        assertEquals(0.75f, meter.localRatio)
+        assertEquals("Last: 140 tok · 10s ago", formatAgentLastUsage(meter, 15_000L))
+        assertEquals("No usage yet", formatAgentLastUsage(AgentUsageMeterUi(), 15_000L))
+        assertEquals("5 units", meter.copy(costUnits = 5L).costLabel)
     }
 }

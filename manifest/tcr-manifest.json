@@ -554,6 +554,21 @@
       ]
     },
     {
+      "id": "dev.aidos.tcr.agent.AgentMeterGauge",
+      "kind": "COMPOSABLE",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentBudgetMeter.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Atomic TCR Component: AgentMeterGauge Interactive usage and budget gauge for agent runs: - Active run steps, tokens, and cost gauge (displaying \"Local · free\" when costUnits == 0L) - Local-vs-remote c",
+      "signature": [
+        "usage: AgentUsageMeterUi",
+        "modifier: Modifier =",
+        "onExportJson: () -> Unit =",
+        "onExportCsv: () -> Unit ="
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.agent.AgentOverviewUiState",
       "kind": "DATA_CLASS",
       "domain": "agent",
@@ -750,6 +765,29 @@
         "workerSpawns: List<WorkerSpawnUi> =",
         "onInspectRun: ((String) -> Unit)? =",
         "modifier: Modifier ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.AgentUsageMeterUi",
+      "kind": "DATA_CLASS",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentBudgetMeter.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Usage and locality telemetry for an agent run and project-wide totals.",
+      "signature": [
+        "currentSteps: Int =",
+        "maxSteps: Int =",
+        "tokensUsed: Long =",
+        "tokenCap: Long? =",
+        "costUnits: Long =",
+        "localCalls: Long =",
+        "remoteCalls: Long =",
+        "projectTotalCalls: Long =",
+        "projectTotalTokens: Long =",
+        "projectCostUnits: Long =",
+        "lastUsageSummary: String? =",
+        "lastUsageTimestampMs: Long? ="
       ]
     },
     {
@@ -1076,6 +1114,19 @@
         "brief: String",
         "budgetSplitWays: Int =",
         "delegatedCapabilities: List<String> ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.agent.formatAgentLastUsage",
+      "kind": "FUNCTION",
+      "domain": "agent",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/agent/AgentBudgetMeter.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Formats [AgentUsageMeterUi] last-usage line relative to [nowMs].",
+      "signature": [
+        "usage: AgentUsageMeterUi",
+        "nowMs: Long"
       ]
     },
     {
@@ -1470,6 +1521,21 @@
       ]
     },
     {
+      "id": "dev.aidos.tcr.engine.CategoryUsage",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Aggregated usage counters for a single [UsageCategory].",
+      "signature": [
+        "requests: Long =",
+        "tokens: Long =",
+        "audioSeconds: Double =",
+        "images: Long ="
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.engine.ConnectedAppsPane",
       "kind": "COMPOSABLE",
       "domain": "engine",
@@ -1609,6 +1675,23 @@
         "STARTING",
         "READY",
         "FAILED"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.EngineUsageSnapshot",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Live concurrency load and session/lifetime usage telemetry from the Engine.",
+      "signature": [
+        "activeRequests: Int =",
+        "queuedRequests: Int =",
+        "maxConcurrency: Int =",
+        "lastUsage: LastUsageEvent? =",
+        "session: Map<UsageCategory, CategoryUsage> =",
+        "lifetime: Map<UsageCategory, CategoryUsage> ="
       ]
     },
     {
@@ -1810,6 +1893,20 @@
         "devices: List<LanDeviceUi> =",
         "pairing: LanPairingUi? =",
         "error: String? ="
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.LastUsageEvent",
+      "kind": "DATA_CLASS",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Most recent inference usage event recorded by the Engine.",
+      "signature": [
+        "category: UsageCategory",
+        "summary: String",
+        "timestampMs: Long"
       ]
     },
     {
@@ -2465,12 +2562,14 @@
       "domain": "engine",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/StatusPane.kt",
       "status": "STABLE",
-      "contract": "1.0.0",
-      "summary": "Organism TCR Component: StatusPane Engine status, resident models, and memory budget dashboard: - Engine running/stopped state banner with host-specific control toggle - Resident memory models list - ",
+      "contract": "1.1.0",
+      "summary": "Organism TCR Component: StatusPane Engine status, resident models, memory budget, and load/usage dashboard: - Engine running/stopped state banner with host-specific control toggle - Resident memory mo",
       "signature": [
         "state: StatusUiState",
         "engineControl: @Composable () -> Unit",
-        "modifier: Modifier ="
+        "modifier: Modifier =",
+        "onExportUsageJson: () -> Unit =",
+        "onExportUsageCsv: () -> Unit ="
       ]
     },
     {
@@ -2479,7 +2578,7 @@
       "domain": "engine",
       "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
       "status": "EXPERIMENTAL",
-      "contract": "0.1.0",
+      "contract": "0.1.1",
       "summary": "Status pane summary telemetry.",
       "signature": [
         "isEngineRunning: Boolean =",
@@ -2489,7 +2588,8 @@
         "freeStorageGb: Int? =",
         "approvedApps: List<String> =",
         "pendingAppCount: Int =",
-        "linkedPeerCount: Int ="
+        "linkedPeerCount: Int =",
+        "usage: EngineUsageSnapshot? ="
       ]
     },
     {
@@ -2613,6 +2713,23 @@
       ]
     },
     {
+      "id": "dev.aidos.tcr.engine.UsageCategory",
+      "kind": "ENUM",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Inference usage category tracked by the Engine.",
+      "signature": [
+        "CHAT",
+        "EMBEDDINGS",
+        "DECISIONS",
+        "STT",
+        "VISION",
+        "TTS"
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.engine.capacityLine",
       "kind": "FUNCTION",
       "domain": "engine",
@@ -2650,6 +2767,18 @@
       ]
     },
     {
+      "id": "dev.aidos.tcr.engine.formatCategoryUsage",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Formats a [CategoryUsage] into a compact human-readable summary.",
+      "signature": [
+        "usage: CategoryUsage?"
+      ]
+    },
+    {
       "id": "dev.aidos.tcr.engine.formatElapsed",
       "kind": "FUNCTION",
       "domain": "engine",
@@ -2659,6 +2788,19 @@
       "summary": "Elapsed duration formatter.",
       "signature": [
         "elapsedMs: Long"
+      ]
+    },
+    {
+      "id": "dev.aidos.tcr.engine.formatLastUsage",
+      "kind": "FUNCTION",
+      "domain": "engine",
+      "file": "src/commonMain/kotlin/dev/aidos/tcr/engine/EngineModels.kt",
+      "status": "EXPERIMENTAL",
+      "contract": "0.1.0",
+      "summary": "Formats a [LastUsageEvent] relative to [nowMs] (e.g.",
+      "signature": [
+        "event: LastUsageEvent?",
+        "nowMs: Long"
       ]
     },
     {

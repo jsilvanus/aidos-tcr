@@ -8,17 +8,24 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import dev.aidos.tcr.agent.AgentFilterTab
+import dev.aidos.tcr.agent.AgentMeterGauge
 import dev.aidos.tcr.agent.AgentOverviewUiState
+import dev.aidos.tcr.agent.AgentUsageMeterUi
 import dev.aidos.tcr.agent.AgentsPane
 import dev.aidos.tcr.agent.SampleAgentRuns
+import dev.aidos.tcr.engine.CategoryUsage
+import dev.aidos.tcr.engine.EngineUsageSnapshot
+import dev.aidos.tcr.engine.LastUsageEvent
 import dev.aidos.tcr.engine.MemoryBudget
 import dev.aidos.tcr.engine.ResidentModel
 import dev.aidos.tcr.engine.StatusPane
 import dev.aidos.tcr.engine.StatusUiState
+import dev.aidos.tcr.engine.UsageCategory
 import dev.aidos.tcr.generative.GenerativeUiRegistry
 import dev.aidos.tcr.mcp.McpAdoptionFilter
 import dev.aidos.tcr.mcp.McpServerUiModel
@@ -75,6 +82,103 @@ class PanesUiTest {
         onNodeWithText("2 peer devices linked for cluster inference").assertIsDisplayed()
         onNodeWithText("42 GB free").assertIsDisplayed()
         onNodeWithText("2 approved · 1 pending approval").assertIsDisplayed()
+    }
+
+    @Test fun statusPaneLoadAndUsageTogglesViewsAndOpensDetailsDialog() = runComposeUiTest {
+        var jsonExports = 0
+        var csvExports = 0
+        val usage = EngineUsageSnapshot(
+            activeRequests = 2,
+            queuedRequests = 1,
+            maxConcurrency = 4,
+            lastUsage = LastUsageEvent(UsageCategory.CHAT, "312 tok", 1_000L),
+            session = mapOf(UsageCategory.CHAT to CategoryUsage(requests = 3, tokens = 900)),
+            lifetime = mapOf(UsageCategory.EMBEDDINGS to CategoryUsage(requests = 12, tokens = 4000)),
+        )
+        setContent {
+            TcrTheme {
+                StatusPane(
+                    state = StatusUiState(isEngineRunning = true, usage = usage),
+                    engineControl = {},
+                    onExportUsageJson = { jsonExports++ },
+                    onExportUsageCsv = { csvExports++ },
+                )
+            }
+        }
+        onNodeWithText("Load & Usage").assertIsDisplayed()
+        onNodeWithText("Current Load").assertIsDisplayed()
+        onNodeWithText("Active: 2 / 4").assertIsDisplayed()
+        onNodeWithText("Queued: 1").assertIsDisplayed()
+        onNodeWithText("Last: chat · 312 tok", substring = true).assertIsDisplayed()
+
+        // Tap toggles to Session Totals -> Lifetime Totals -> Current Load
+        onNodeWithText("Active: 2 / 4").performClick()
+        onNodeWithText("Session Totals").assertIsDisplayed()
+        onNodeWithText("3 req · 900 tok").assertIsDisplayed()
+
+        onNodeWithText("3 req · 900 tok").performClick()
+        onNodeWithText("Lifetime Totals").assertIsDisplayed()
+        onNodeWithText("12 req · 4000 tok").assertIsDisplayed()
+
+        // Info icon opens Usage Details dialog with all 6 categories and export buttons
+        onNodeWithContentDescription("Usage details").performClick()
+        onNodeWithText("Usage Details").assertIsDisplayed()
+        onNodeWithText("Speech to Text").assertIsDisplayed()
+        onNodeWithText("Export JSON").performClick()
+        onNodeWithText("Export CSV").performClick()
+        assertEquals(1, jsonExports)
+        assertEquals(1, csvExports)
+        onNodeWithText("Close").performClick()
+    }
+
+    @Test fun agentMeterGaugeTogglesViewsAndOpensDetailsDialog() = runComposeUiTest {
+        var jsonExports = 0
+        var csvExports = 0
+        val meter = AgentUsageMeterUi(
+            currentSteps = 3,
+            maxSteps = 8,
+            tokensUsed = 500,
+            costUnits = 0L,
+            localCalls = 4,
+            remoteCalls = 1,
+            projectTotalCalls = 20,
+            projectTotalTokens = 8000,
+            projectCostUnits = 0L,
+            lastUsageSummary = "180 tok",
+            lastUsageTimestampMs = 1_000L,
+        )
+        setContent {
+            TcrTheme {
+                AgentMeterGauge(
+                    usage = meter,
+                    onExportJson = { jsonExports++ },
+                    onExportCsv = { csvExports++ },
+                )
+            }
+        }
+        onNodeWithText("Active Run").assertIsDisplayed()
+        onNodeWithText("Local · free").assertIsDisplayed()
+        onNodeWithText("Steps: 3 / 8").assertIsDisplayed()
+        onNodeWithText("Local 4 · Remote 1").assertIsDisplayed()
+        onNodeWithText("Last: 180 tok", substring = true).assertIsDisplayed()
+
+        // Tap toggles to Project Totals -> Local vs Remote
+        onNodeWithText("Steps: 3 / 8").performClick()
+        onNodeWithText("Project Totals").assertIsDisplayed()
+        onNodeWithText("20 calls · 8000 tok").assertIsDisplayed()
+
+        onNodeWithText("20 calls · 8000 tok").performClick()
+        onNodeWithText("Local vs Remote").assertIsDisplayed()
+        onNodeWithText("80% local").assertIsDisplayed()
+
+        // Info icon opens Usage & Budget Details dialog
+        onNodeWithContentDescription("Usage & budget details").performClick()
+        onNodeWithText("Usage & Budget Details").assertIsDisplayed()
+        onNodeWithText("Export JSON").performClick()
+        onNodeWithText("Export CSV").performClick()
+        assertEquals(1, jsonExports)
+        assertEquals(1, csvExports)
+        onNodeWithText("Close").performClick()
     }
 
     // --- agent.AgentsPane --------------------------------------------------------------

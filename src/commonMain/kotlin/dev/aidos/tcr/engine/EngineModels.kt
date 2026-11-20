@@ -386,6 +386,74 @@ class ModelsPaneActions(
 )
 
 /**
+ * Inference usage category tracked by the Engine.
+ */
+@Serializable
+enum class UsageCategory {
+    CHAT,
+    EMBEDDINGS,
+    DECISIONS,
+    STT,
+    VISION,
+    TTS;
+
+    fun displayName(): String = when (this) {
+        CHAT -> "Chat"
+        EMBEDDINGS -> "Embeddings"
+        DECISIONS -> "Decisions"
+        STT -> "Speech to Text"
+        VISION -> "Vision"
+        TTS -> "Text to Speech"
+    }
+
+    fun shortLabel(): String = when (this) {
+        CHAT -> "chat"
+        EMBEDDINGS -> "embeddings"
+        DECISIONS -> "decisions"
+        STT -> "stt"
+        VISION -> "vision"
+        TTS -> "tts"
+    }
+}
+
+/**
+ * Aggregated usage counters for a single [UsageCategory].
+ */
+@Serializable
+data class CategoryUsage(
+    val requests: Long = 0,
+    val tokens: Long = 0,
+    val audioSeconds: Double = 0.0,
+    val images: Long = 0,
+)
+
+/**
+ * Most recent inference usage event recorded by the Engine.
+ */
+@Serializable
+data class LastUsageEvent(
+    val category: UsageCategory,
+    val summary: String,
+    val timestampMs: Long,
+)
+
+/**
+ * Live concurrency load and session/lifetime usage telemetry from the Engine.
+ */
+@Serializable
+data class EngineUsageSnapshot(
+    val activeRequests: Int = 0,
+    val queuedRequests: Int = 0,
+    val maxConcurrency: Int = 1,
+    val lastUsage: LastUsageEvent? = null,
+    val session: Map<UsageCategory, CategoryUsage> = emptyMap(),
+    val lifetime: Map<UsageCategory, CategoryUsage> = emptyMap(),
+) {
+    val loadFraction: Float
+        get() = if (maxConcurrency > 0) (activeRequests.toFloat() / maxConcurrency).coerceIn(0f, 1f) else 0f
+}
+
+/**
  * Status pane summary telemetry.
  */
 @Serializable
@@ -398,6 +466,7 @@ data class StatusUiState(
     val approvedApps: List<String> = emptyList(),
     val pendingAppCount: Int = 0,
     val linkedPeerCount: Int = 0,
+    val usage: EngineUsageSnapshot? = null,
 )
 
 /**
@@ -514,6 +583,35 @@ fun formatElapsed(elapsedMs: Long): String = when {
     elapsedMs < 3_600_000 -> "${elapsedMs / 60_000}m ago"
     elapsedMs < 86_400_000 -> "${elapsedMs / 3_600_000}h ago"
     else -> "${elapsedMs / 86_400_000}d ago"
+}
+
+/**
+ * Formats a [LastUsageEvent] relative to [nowMs] (e.g. `Last: chat · 312 tok · 12s ago`).
+ */
+fun formatLastUsage(event: LastUsageEvent?, nowMs: Long): String {
+    if (event == null) return "No usage yet"
+    val elapsed = formatElapsed((nowMs - event.timestampMs).coerceAtLeast(0L))
+    return "Last: ${event.category.shortLabel()} · ${event.summary} · $elapsed"
+}
+
+/**
+ * Formats a [CategoryUsage] into a compact human-readable summary.
+ */
+fun formatCategoryUsage(usage: CategoryUsage?): String {
+    if (usage == null || (usage.requests == 0L && usage.tokens == 0L && usage.audioSeconds == 0.0 && usage.images == 0L)) {
+        return "0 req"
+    }
+    val parts = buildList {
+        add("${usage.requests} req")
+        if (usage.tokens > 0) add("${usage.tokens} tok")
+        if (usage.audioSeconds > 0.0) {
+            val tenths = kotlin.math.round(usage.audioSeconds * 10).toLong()
+            val formatted = if (tenths % 10 == 0L) "${tenths / 10}s" else "${tenths / 10}.${tenths % 10}s"
+            add(formatted)
+        }
+        if (usage.images > 0) add("${usage.images} img")
+    }
+    return parts.joinToString(" · ")
 }
 
 /**
